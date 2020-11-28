@@ -1,8 +1,11 @@
 module V1
   class RecipesController < ApplicationController
     def index
-      @recipes = Recipe.all
-      render json: @recipes
+      render json: {recipes: Recipe.all}
+    end
+
+    def show
+      render json: {recipe: Recipe.find(params[:id])}
     end
   end
 end
