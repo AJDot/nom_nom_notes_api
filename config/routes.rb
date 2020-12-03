@@ -3,7 +3,9 @@ Rails.application.routes.draw do
     resources :recipes, only: [:index, :show]
   end
 
-  namespace :v1 do
-    concerns :api_base
+  namespace :api do
+    namespace :v1 do
+      concerns :api_base
+    end
   end
 end
