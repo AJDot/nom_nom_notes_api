@@ -11,6 +11,7 @@ use Rack::Cors do
     origins 'localhost:8080'
     resource '*',
              :headers => :any,
-             :methods => [:get, :post, :delete, :put, :options]
+             credentials: true,
+             :methods => [:get, :post, :put, :patch, :delete, :options, :head]
   end
 end

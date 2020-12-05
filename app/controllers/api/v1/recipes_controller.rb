@@ -1,6 +1,7 @@
 module Api
   module V1
     class RecipesController < ApplicationController
+      before_action :authorize_access_request!, except: [:index, :show]
       before_action :set_recipe, only: [:show]
 
       def index

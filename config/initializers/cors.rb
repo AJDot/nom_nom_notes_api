@@ -5,6 +5,7 @@
 
 # Read more: https://github.com/cyu/rack-cors
 
+# USE config.ru FILE INSTEAD (to work with heroku)
 # Rails.application.config.middleware.insert_before 0, Rack::Cors do
 #   allow do
 #     origins 'example.com'
