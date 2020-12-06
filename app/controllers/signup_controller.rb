@@ -19,6 +19,6 @@ class SignupController < ApplicationController
   private
 
   def user_params
-    params.permit(:email, :password, :password_confirmations)
+    params.permit(:email, :password, :password_confirmation)
   end
 end
