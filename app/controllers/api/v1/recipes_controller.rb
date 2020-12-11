@@ -3,7 +3,7 @@ module Api
     class RecipesController < ApplicationController
       before_action :authorize_access_request!, except: [:index, :show]
       before_action :build_recipe, only: [:create]
-      before_action :set_recipe, only: [:show, :update]
+      before_action :set_recipe, only: [:show, :update, :destroy]
 
       def index
         @recipes = Recipe.all
@@ -27,6 +27,14 @@ module Api
           render json: @recipe
         else
           render json: { error: @recipe.errors.full_messages.join(' ') }, status: :unprocessable_entity
+        end
+      end
+
+      def destroy
+        if @recipe.destroy
+          render json: @recipe
+        else
+          render json: {error: @recipe.errors.full_messages.join(' ')}, status: :unprocessable_entity
         end
       end
 
