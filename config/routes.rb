@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   concern :api_base do
-    resources :recipes, only: [:index, :show, :update, :create]
+    resources :recipes, only: [:index, :show, :update, :create, :destroy]
   end
 
   namespace :api do
