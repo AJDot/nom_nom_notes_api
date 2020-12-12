@@ -1,0 +1,24 @@
+class DurationType < ActiveRecord::Type::String
+  def cast(value)
+    case
+    when value.blank?, value.is_a?(ActiveSupport::Duration)
+      value
+    when value.is_a?(Integer)
+      ActiveSupport::Duration.build(value).iso8601
+    else
+      ActiveSupport::Duration.parse(value)
+    end
+  end
+
+  def serialize(duration)
+    return unless duration
+    case duration
+    when String
+      duration
+    else
+      duration.iso8601
+    end
+  end
+end
+
+ActiveRecord::Type.register(:duration, DurationType)

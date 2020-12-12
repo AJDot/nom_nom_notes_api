@@ -49,7 +49,7 @@ module Api
       end
 
       def recipe_params
-        params.require(:recipe).permit(:name, :description, :note)
+        params.require(:recipe).permit(:name, :description, :cook_time, :note)
       end
     end
   end
