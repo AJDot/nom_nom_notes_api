@@ -11,7 +11,7 @@ module Api
       end
 
       def show
-        render json: @recipe
+        render json: @recipe, include: 'steps'
       end
 
       def create
@@ -34,7 +34,7 @@ module Api
         if @recipe.destroy
           render json: @recipe
         else
-          render json: {error: @recipe.errors.full_messages.join(' ')}, status: :unprocessable_entity
+          render json: { error: @recipe.errors.full_messages.join(' ') }, status: :unprocessable_entity
         end
       end
 
@@ -45,11 +45,31 @@ module Api
       end
 
       def set_recipe
-        @recipe = Recipe.find(params[:id])
+        @recipe = Recipe.find_by(client_id: params[:id])
       end
 
       def recipe_params
-        params.require(:recipe).permit(:name, :description, :cook_time, :note)
+        p = params.require(:recipe).permit(
+          :id,
+          :client_id,
+          :name,
+          :description,
+          :cook_time,
+          :note,
+          steps: [
+            :id,
+            :client_id,
+            :_destroy,
+            :description,
+            :recipe_id
+          ]
+        )
+
+        Recipe.reflect_on_all_associations.each do |reflection|
+          p["#{reflection.name}_attributes"] = p.delete(reflection.name) if p[reflection.name].present?
+        end
+
+        p
       end
     end
   end

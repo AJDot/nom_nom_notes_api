@@ -13,63 +13,30 @@
 ActiveRecord::Schema.define(version: 2020_12_12_124033) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
-  create_table "categories", force: :cascade do |t|
-    t.string "name", limit: 100, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "ethnicities", force: :cascade do |t|
-    t.string "name", limit: 100, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "ingredients", force: :cascade do |t|
-    t.bigint "recipe_id"
-    t.text "description", null: false
-    t.index ["recipe_id"], name: "index_ingredients_on_recipe_id"
-  end
-
-  create_table "recipes", force: :cascade do |t|
+  create_table "recipes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "client_id"
     t.string "name", limit: 100, null: false
     t.text "description"
     t.interval "cook_time"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.text "note"
-    t.string "image"
-  end
-
-  create_table "recipes_categories", id: false, force: :cascade do |t|
-    t.bigint "category_id", null: false
-    t.bigint "recipe_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["category_id"], name: "index_recipes_categories_on_category_id"
-    t.index ["recipe_id"], name: "index_recipes_categories_on_recipe_id"
   end
 
-  create_table "recipes_ethnicities", id: false, force: :cascade do |t|
-    t.bigint "recipe_id", null: false
-    t.bigint "ethnicity_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["ethnicity_id"], name: "index_recipes_ethnicities_on_ethnicity_id"
-    t.index ["recipe_id"], name: "index_recipes_ethnicities_on_recipe_id"
-  end
-
-  create_table "steps", force: :cascade do |t|
-    t.bigint "recipe_id"
+  create_table "steps", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "recipe_id", null: false
+    t.uuid "client_id"
     t.text "description", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["recipe_id"], name: "index_steps_on_recipe_id"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "client_id"
     t.string "first_name"
     t.string "last_name"
     t.string "email"
