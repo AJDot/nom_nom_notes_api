@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_12_124033) do
+ActiveRecord::Schema.define(version: 2020_12_16_012905) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 2020_12_12_124033) do
     t.text "description", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "sort_order"
     t.index ["recipe_id"], name: "index_steps_on_recipe_id"
   end
 

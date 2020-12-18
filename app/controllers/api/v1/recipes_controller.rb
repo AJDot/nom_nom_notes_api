@@ -61,7 +61,8 @@ module Api
             :client_id,
             :_destroy,
             :description,
-            :recipe_id
+            :recipe_id,
+            :sort_order,
           ]
         )
 
