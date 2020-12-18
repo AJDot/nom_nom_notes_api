@@ -1,4 +1,4 @@
-class CreateRecipes < ActiveRecord::Migration[5.2]
+class CreateRecipes < ActiveRecord::Migration[6.0]
   def change
     create_table :recipes, id: :uuid do |t|
       t.uuid :client_id
