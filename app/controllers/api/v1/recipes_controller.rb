@@ -7,11 +7,11 @@ module Api
 
       def index
         @recipes = Recipe.all
-        render json: @recipes, include: 'steps'
+        render json: @recipes, include: %w[steps ingredients]
       end
 
       def show
-        render json: @recipe, include: 'steps'
+        render json: @recipe, include: %w[steps ingredients]
       end
 
       def create
@@ -57,6 +57,14 @@ module Api
           :cook_time,
           :note,
           steps: [
+            :id,
+            :client_id,
+            :_destroy,
+            :description,
+            :recipe_id,
+            :sort_order,
+          ],
+          ingredients: [
             :id,
             :client_id,
             :_destroy,

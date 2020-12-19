@@ -4,7 +4,8 @@ class Recipe < ApplicationRecord
   # has_and_belongs_to_many :ethnicities, join_table: 'recipes_ethnicities'
   has_many :steps, dependent: :destroy, primary_key: :client_id
   accepts_nested_attributes_for :steps, allow_destroy: true
-  # has_many :ingredients, dependent: :destroy
+  has_many :ingredients, dependent: :destroy, primary_key: :client_id
+  accepts_nested_attributes_for :ingredients, allow_destroy: true
 
   # mount_uploader :image, RecipeImageUploader
 
