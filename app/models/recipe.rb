@@ -1,6 +1,7 @@
 class Recipe < ApplicationRecord
   attribute :cook_time, :duration
-  # has_and_belongs_to_many :categories, join_table: 'recipes_categories'
+  has_many :recipe_categories, primary_key: :client_id
+  has_many :categories, through: :recipe_categories, primary_key: :client_id
   # has_and_belongs_to_many :ethnicities, join_table: 'recipes_ethnicities'
   has_many :steps, dependent: :destroy, primary_key: :client_id
   accepts_nested_attributes_for :steps, allow_destroy: true

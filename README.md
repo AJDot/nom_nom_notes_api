@@ -1,5 +1,10 @@
 # README
 
+Start postgres server
+```bash
+pg_ctl -D /usr/local/var/postgres start
+```
+
 This README would normally document whatever steps are necessary to get the
 application up and running.
 

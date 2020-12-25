@@ -7,11 +7,11 @@ module Api
 
       def index
         @recipes = Recipe.all
-        render json: @recipes, include: %w[steps ingredients]
+        render json: @recipes, include: %w[steps ingredients categories recipe_categories]
       end
 
       def show
-        render json: @recipe, include: %w[steps ingredients]
+        render json: @recipe, include: %w[steps ingredients categories recipe_categories]
       end
 
       def create
