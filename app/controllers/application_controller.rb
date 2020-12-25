@@ -13,4 +13,13 @@ class ApplicationController < ActionController::API
   def not_authorized
     render json: { error: 'Not Authorized' }, status: :forbidden
   end
+
+  def query_params
+    params.require(:query).permit(
+      :term,
+      not: [
+        client_id: [],
+      ]
+    )
+  end
 end
