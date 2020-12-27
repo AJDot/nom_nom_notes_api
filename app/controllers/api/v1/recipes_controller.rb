@@ -71,11 +71,17 @@ module Api
             :description,
             :recipe_id,
             :sort_order,
-          ]
+          ],
+          recipe_categories: [
+            :id,
+            :client_id,
+            :recipe_id,
+            :category_id,
+          ],
         )
 
         Recipe.reflect_on_all_associations.each do |reflection|
-          p["#{reflection.name}_attributes"] = p.delete(reflection.name) if p[reflection.name].present?
+          p["#{reflection.name}_attributes"] = p.delete(reflection.name) if p.has_key?(reflection.name)
         end
 
         p
