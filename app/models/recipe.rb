@@ -8,7 +8,7 @@ class Recipe < ApplicationRecord
   has_many :ingredients, dependent: :destroy, primary_key: :client_id
   accepts_nested_attributes_for :ingredients, allow_destroy: true
 
-  # mount_uploader :image, RecipeImageUploader
+  mount_uploader :image, RecipeImageUploader
 
   validates :name,
             uniqueness: {message: 'must be unique'},

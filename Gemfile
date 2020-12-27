@@ -29,6 +29,9 @@ gem 'rack-cors'
 gem 'active_model_serializers', '~> 0.10.0'
 
 gem 'pg_search'
+gem 'fog-aws'
+gem 'carrierwave'
+gem 'figaro'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

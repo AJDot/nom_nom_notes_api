@@ -56,6 +56,7 @@ module Api
           :description,
           :cook_time,
           :note,
+          :image,
           steps: [
             :id,
             :client_id,
