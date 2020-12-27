@@ -75,6 +75,7 @@ module Api
           recipe_categories: [
             :id,
             :client_id,
+            :_destroy,
             :recipe_id,
             :category_id,
           ],
