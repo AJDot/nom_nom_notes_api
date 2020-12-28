@@ -1,12 +1,16 @@
 module Api
   module V1
     class CategoriesController < ApplicationController
-      before_action :authorize_access_request!
+      before_action :authorize_access_request!, except: [:index]
 
       def index
         @categories = Category
-        @categories = @categories.where.not(query_params[:not]) if query_params[:not]
-        @categories = @categories.search_by_name(query_params[:term])
+        if params[:query].present?
+          @categories = @categories.where.not(query_params[:not]) if query_params[:not]
+          @categories = @categories.search_by_name(query_params[:term])
+        else
+          @categories = @categories.all
+        end
         render json: @categories
       end
     end
