@@ -1,3 +1,4 @@
+# typed: strict
 # Transform JSON request param keys from JSON-conventional camelCase to
 # Rails-conventional snake_case:
 # https://stackoverflow.com/questions/17240106/what-is-the-best-way-to-convert-all-controller-params-from-camelcase-to-snake-ca

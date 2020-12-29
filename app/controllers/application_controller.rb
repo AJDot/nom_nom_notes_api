@@ -1,4 +1,10 @@
+# typed: true
 class ApplicationController < ActionController::API
+  class SearchQueryParams < T::Struct
+    const :term, String
+    const :not, T.nilable(T::Hash[Symbol, T.untyped])
+  end
+
   include JWTSessions::RailsAuthorization
   # protect_from_forgery prepend: true, with: :exception
 
@@ -15,11 +21,6 @@ class ApplicationController < ActionController::API
   end
 
   def query_params
-    params.require(:query).permit(
-      :term,
-      not: [
-        client_id: [],
-      ]
-    )
+    TypedParams[SearchQueryParams].new.extract!(T.cast(params.require(:query), ActionController::Parameters))
   end
 end

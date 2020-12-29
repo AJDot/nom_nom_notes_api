@@ -1,3 +1,4 @@
+# typed: strict
 class Ingredient < ApplicationRecord
   belongs_to :recipe, primary_key: :client_id
 

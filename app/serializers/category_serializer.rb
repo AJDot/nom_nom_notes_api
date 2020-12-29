@@ -1,3 +1,4 @@
+# typed: strict
 class CategorySerializer < ActiveModel::Serializer
   attributes :id, :client_id, :name
   has_many :recipes, serializer: RecipeSerializer

@@ -1,3 +1,4 @@
+# typed: strict
 class RecipeSerializer < ActiveModel::Serializer
   attributes :id, :client_id, :name, :description, :cook_time, :note, :image
   has_many :steps, serializer: StepSerializer

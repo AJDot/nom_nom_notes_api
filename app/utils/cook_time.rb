@@ -1,3 +1,4 @@
+# typed: true
 class CookTime
   attr_reader :interval, :hours, :minutes
 

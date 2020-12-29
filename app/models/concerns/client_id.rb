@@ -1,3 +1,4 @@
+# typed: false
 module ClientId
   extend ActiveSupport::Concern
 

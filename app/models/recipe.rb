@@ -1,3 +1,4 @@
+# typed: strict
 class Recipe < ApplicationRecord
   attribute :cook_time, :duration
   has_many :recipe_categories, primary_key: :client_id

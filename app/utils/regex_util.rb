@@ -1,3 +1,4 @@
+# typed: strict
 module RegexUtil
   extend self
 

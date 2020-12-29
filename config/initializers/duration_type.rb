@@ -1,3 +1,4 @@
+# typed: true
 class DurationType < ActiveRecord::Type::String
   def cast(value)
     case

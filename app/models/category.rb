@@ -1,3 +1,4 @@
+# typed: strict
 class Category < ApplicationRecord
   include PgSearch::Model
 

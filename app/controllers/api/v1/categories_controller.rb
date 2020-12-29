@@ -1,3 +1,4 @@
+# typed: ignore
 module Api
   module V1
     class CategoriesController < ApplicationController
@@ -6,8 +7,8 @@ module Api
       def index
         @categories = Category
         if params[:query].present?
-          @categories = @categories.where.not(query_params[:not]) if query_params[:not]
-          @categories = @categories.search_by_name(query_params[:term])
+          @categories = @categories.where.not(query_params.not) if query_params.not
+          @categories = @categories.search_by_name(query_params.term)
         else
           @categories = @categories.all
         end
