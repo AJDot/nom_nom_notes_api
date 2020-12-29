@@ -1,5 +1,6 @@
-# typed: ignore
+# typed: strict
 class SignupController < ApplicationController
+  sig {void}
   def create
     user = User.new(user_params)
     if user.save
@@ -19,6 +20,7 @@ class SignupController < ApplicationController
 
   private
 
+  sig {returns(ActionController::Parameters)}
   def user_params
     params.permit(:email, :password, :password_confirmation)
   end

@@ -1,10 +1,6 @@
-# typed: true
+# typed: strict
 class ApplicationController < ActionController::API
-  class SearchQueryParams < T::Struct
-    const :term, String
-    const :not, T.nilable(T::Hash[Symbol, T.untyped])
-  end
-
+  extend T::Sig
   include JWTSessions::RailsAuthorization
   # protect_from_forgery prepend: true, with: :exception
 
@@ -12,14 +8,12 @@ class ApplicationController < ActionController::API
 
   private
 
-  # def current_user
-  #   @current_user ||= User.find(payload['user_id'])
-  # end
-
+  sig { void }
   def not_authorized
     render json: { error: 'Not Authorized' }, status: :forbidden
   end
 
+  sig {returns(SearchQueryParams)}
   def query_params
     TypedParams[SearchQueryParams].new.extract!(T.cast(params.require(:query), ActionController::Parameters))
   end

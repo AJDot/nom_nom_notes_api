@@ -1,11 +1,12 @@
-# typed: ignore
+# typed: strict
 class SigninController < ApplicationController
   before_action :authorize_access_request!, only: [:destroy]
 
+  sig {void}
   def create
     user = User.find_by(email: params[:email])
     if user.present?
-      if user.authenticate(params[:password])
+      if user.authenticate(T.cast(params[:password], T.nilable(String)))
         payload = { user_id: user.id }
         session = JWTSessions::Session.new(payload: payload, refresh_by_access_allowed: true)
         tokens = session.login
@@ -23,6 +24,7 @@ class SigninController < ApplicationController
     end
   end
 
+  sig {void}
   def destroy
     session = JWTSessions::Session.new(payload: payload)
     session.flush_by_access_payload
@@ -31,6 +33,7 @@ class SigninController < ApplicationController
 
   private
 
+  sig {void}
   def not_found
     render json: { error: "Cannot find email/password combination" }, status: :not_found
   end
