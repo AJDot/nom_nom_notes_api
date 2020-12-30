@@ -4,5 +4,11 @@ set -e
 
 cd "${0%/*}/.."
 
-echo "Running rubocop"
-bundle exec rubocop
+if hash bundle
+then
+  if hash rubocop
+  then
+    echo "Running rubocop"
+    bundle exec rubocop
+  fi
+fi
