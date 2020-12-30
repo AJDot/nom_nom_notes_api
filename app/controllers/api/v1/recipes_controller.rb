@@ -19,7 +19,7 @@ module Api
 
       def create
         if @recipe.save
-          render json: @recipe
+          render json: @recipe, status: :created
         else
           render json: { error: @recipe.errors.full_messages }, status: :unprocessable_entity
         end
