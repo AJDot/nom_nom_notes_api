@@ -5,6 +5,7 @@ FactoryBot.define do
     trait :default do
       email { 'bob@vance.com' }
       password { 'Ta123456' }
+      password_confirmation { password }
     end
   end
 end
