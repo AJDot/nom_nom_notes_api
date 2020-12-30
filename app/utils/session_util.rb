@@ -7,7 +7,7 @@ class SessionUtil
   def build_session(payload)
     @session = JWTSessions::Session.new(
       payload: payload,
-      refresh_by_access_allowed: true
+      refresh_by_access_allowed: true,
     )
   end
 
@@ -15,12 +15,16 @@ class SessionUtil
     @tokens = @session.login
   end
 
-  def set_cookie(response, tokens)
+  def refresh(&block)
+    @tokens = @session.refresh_by_access_payload(&block)
+  end
+
+  def set_cookie(response, tokens = @tokens)
     response.set_cookie(
       JWTSessions.access_cookie,
       value: tokens[:access],
       httponly: true,
-      secure: Rails.env.production?
+      secure: Rails.env.production?,
     )
   end
 end

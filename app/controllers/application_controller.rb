@@ -22,7 +22,7 @@ class ApplicationController < ActionController::API
       :term,
       not: [
         client_id: []
-      ]
+      ],
     )
   end
 end

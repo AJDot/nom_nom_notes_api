@@ -56,7 +56,7 @@ module Api
           *Recipe.to_params,
           steps: Step.to_params,
           ingredients: Ingredient.to_params,
-          recipe_categories: RecipeCategory.to_params
+          recipe_categories: RecipeCategory.to_params,
         )
 
         Recipe.reflect_on_all_associations.each do |reflection|

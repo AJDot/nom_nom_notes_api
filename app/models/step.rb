@@ -13,7 +13,7 @@ class Step < ApplicationRecord
       :_destroy,
       :description,
       :recipe_id,
-      :sort_order
+      :sort_order,
     ).to_params
   end
 end

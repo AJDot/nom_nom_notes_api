@@ -23,3 +23,6 @@ Style/HashTransformValues:
   Enabled: true
 Style/SlicingWithRange:
   Enabled: true
+Style/TrailingCommaInArguments:
+  Enabled: true
+  EnforcedStyleForMultiline: consistent_comma

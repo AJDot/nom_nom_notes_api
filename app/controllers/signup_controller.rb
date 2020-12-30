@@ -21,9 +21,8 @@ class SignupController < ApplicationController
   def authenticate_and_sign_up(user)
     sess_util = SessionUtil.new
     sess_util.build_session({ user_id: user.id })
-    tokens = sess_util.login
-
-    sess_util.set_cookie(response, tokens)
+    sess_util.login
+    sess_util.set_cookie(response)
     render json: { csrf: sess_util.tokens[:csrf] }
   end
 end
