@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'carrierwave'
 require 'carrierwave/orm/activerecord'
 require 'carrierwave/storage/fog'
@@ -8,7 +10,7 @@ CarrierWave.configure do |config|
     provider: 'AWS',
     aws_access_key_id: Figaro.env.AWS_ACCESS_KEY_ID,
     aws_secret_access_key: Figaro.env.AWS_SECRET_ACCESS_KEY,
-    region: 'us-east-1',
+    region: 'us-east-1'
 
   }
   config.fog_directory = Figaro.env.S3_BUCKET_NAME

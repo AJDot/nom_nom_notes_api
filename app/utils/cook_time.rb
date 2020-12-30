@@ -1,10 +1,11 @@
+# frozen_string_literal: true
+
+# Small helper class to handle transformations of postgresql interval to something usable
 class CookTime
   attr_reader :interval, :hours, :minutes
 
   def initialize(interval)
-    if interval.nil? || interval.empty?
-      interval = '00:00'
-    end
+    interval = '00:00' if interval.nil? || interval.empty?
     # strip off seconds and leading zeros
     # turn into HH:MM format (hours may be > 99)
     hh_mm = /\A0*(\d*):0*(\d*)/
@@ -24,6 +25,7 @@ class CookTime
 
   def ==(other)
     return nil unless [String, CookTime].include? other.class
+
     if other.instance_of? String
       interval == other
     elsif other.instance_of? CookTime

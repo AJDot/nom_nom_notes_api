@@ -1,5 +1,5 @@
-module RegexUtil
-  extend self
+# frozen_string_literal: true
 
-  EMAIL = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
+module RegexUtil
+  EMAIL = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i.freeze
 end

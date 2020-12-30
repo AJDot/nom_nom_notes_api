@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 module Api
   module V1
+    # Controller for Category model
     class CategoriesController < ApplicationController
       before_action :authorize_access_request!, except: [:index]
 

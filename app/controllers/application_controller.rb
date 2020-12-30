@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Main controller that all other controllers should inherit from
 class ApplicationController < ActionController::API
   include JWTSessions::RailsAuthorization
   # protect_from_forgery prepend: true, with: :exception
@@ -18,7 +21,7 @@ class ApplicationController < ActionController::API
     params.require(:query).permit(
       :term,
       not: [
-        client_id: [],
+        client_id: []
       ]
     )
   end

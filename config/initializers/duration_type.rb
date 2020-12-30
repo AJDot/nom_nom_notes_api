@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
+# Type cast for converting between postgresql interval format and a ActiveSupport::Duration
 class DurationType < ActiveRecord::Type::String
   def cast(value)
-    case
-    when value.blank?, value.is_a?(ActiveSupport::Duration)
+    if value.blank? || value.is_a?(ActiveSupport::Duration)
       value
-    when value.is_a?(Integer)
+    elsif value.is_a?(Integer)
       ActiveSupport::Duration.build(value).iso8601
     else
       ActiveSupport::Duration.parse(value)
@@ -12,6 +14,7 @@ class DurationType < ActiveRecord::Type::String
 
   def serialize(duration)
     return unless duration
+
     case duration
     when String
       duration
