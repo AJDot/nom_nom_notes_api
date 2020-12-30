@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# The recipe class, represents a recipe, of course
 class Recipe < ApplicationRecord
   attribute :cook_time, :duration
   has_many :recipe_categories, primary_key: :client_id
@@ -11,6 +14,18 @@ class Recipe < ApplicationRecord
   mount_uploader :image, RecipeImageUploader
 
   validates :name,
-            uniqueness: {message: 'must be unique'},
-            length: {minimum: 1, maximum: 100, message: 'must be between 1 and 100 characters'}
+            uniqueness: { message: 'must be unique' },
+            length: { minimum: 1, maximum: 100, message: 'must be between 1 and 100 characters' }
+
+  def self.to_params
+    RecordParams.new(
+      :id,
+      :client_id,
+      :name,
+      :description,
+      :cook_time,
+      :note,
+      :image
+    ).to_params
+  end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
@@ -9,10 +11,9 @@ gem 'rails', '~> 6.0.3', '>= 6.0.3.2'
 gem 'pg'
 # Use Puma as the app server
 gem 'puma', '~> 4.1'
-# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-# gem 'jbuilder', '~> 2.7'
 # Use Redis adapter to run Action Cable in production
 gem 'redis', '~> 4.0'
+
 gem 'jwt_sessions', '~> 2.3'
 # Use Active Model has_secure_password
 gem 'bcrypt', '~> 3.1.7'
@@ -28,15 +29,16 @@ gem 'rack-cors'
 
 gem 'active_model_serializers', '~> 0.10.0'
 
-gem 'pg_search'
-gem 'fog-aws'
 gem 'carrierwave'
 gem 'figaro'
+gem 'fog-aws'
+gem 'pg_search'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'awesome_print'
+  gem 'byebug', platforms: %i[mri mingw x64_mingw]
+  gem 'rubocop', require: false
 end
 
 group :development do
@@ -47,4 +49,4 @@ group :development do
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]

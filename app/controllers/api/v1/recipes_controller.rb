@@ -1,9 +1,12 @@
+# frozen_string_literal: true
+
 module Api
   module V1
+    # Controller to handle recipe actions
     class RecipesController < ApplicationController
-      before_action :authorize_access_request!, except: [:index, :show]
+      before_action :authorize_access_request!, except: %i[index show]
       before_action :build_recipe, only: [:create]
-      before_action :set_recipe, only: [:show, :update, :destroy]
+      before_action :set_recipe, only: %i[show update destroy]
 
       def index
         @recipes = Recipe.all
@@ -18,7 +21,7 @@ module Api
         if @recipe.save
           render json: @recipe
         else
-          render json: { error: @recipe.errors.full_messages.join(' ') }, status: :unprocessable_entity
+          render json: { error: @recipe.errors.full_messages }, status: :unprocessable_entity
         end
       end
 
@@ -26,7 +29,7 @@ module Api
         if @recipe.update(recipe_params)
           render json: @recipe
         else
-          render json: { error: @recipe.errors.full_messages.join(' ') }, status: :unprocessable_entity
+          render json: { error: @recipe.errors.full_messages }, status: :unprocessable_entity
         end
       end
 
@@ -34,7 +37,7 @@ module Api
         if @recipe.destroy
           render json: @recipe
         else
-          render json: { error: @recipe.errors.full_messages.join(' ') }, status: :unprocessable_entity
+          render json: { error: @recipe.errors.full_messages }, status: :unprocessable_entity
         end
       end
 
@@ -50,40 +53,14 @@ module Api
 
       def recipe_params
         p = params.require(:recipe).permit(
-          :id,
-          :client_id,
-          :name,
-          :description,
-          :cook_time,
-          :note,
-          :image,
-          steps: [
-            :id,
-            :client_id,
-            :_destroy,
-            :description,
-            :recipe_id,
-            :sort_order,
-          ],
-          ingredients: [
-            :id,
-            :client_id,
-            :_destroy,
-            :description,
-            :recipe_id,
-            :sort_order,
-          ],
-          recipe_categories: [
-            :id,
-            :client_id,
-            :_destroy,
-            :recipe_id,
-            :category_id,
-          ],
+          *Recipe.to_params,
+          steps: Step.to_params,
+          ingredients: Ingredient.to_params,
+          recipe_categories: RecipeCategory.to_params
         )
 
         Recipe.reflect_on_all_associations.each do |reflection|
-          p["#{reflection.name}_attributes"] = p.delete(reflection.name) if p.has_key?(reflection.name)
+          p["#{reflection.name}_attributes"] = p.delete(reflection.name) if p.key?(reflection.name)
         end
 
         p

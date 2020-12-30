@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   concern :api_base do
-    resources :recipes, only: [:index, :show, :update, :create, :destroy]
+    resources :recipes, only: %i[index show update create destroy]
     resources :categories, only: [:index]
   end
 

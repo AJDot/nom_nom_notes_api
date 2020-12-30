@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Adds categories table and recipe_ingredients table to relate ingredients to recipes
 class CreateRecipeIngredients < ActiveRecord::Migration[6.0]
   def change
     create_table :ingredients, id: :uuid do |t|
