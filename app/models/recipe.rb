@@ -25,7 +25,7 @@ class Recipe < ApplicationRecord
       :description,
       :cook_time,
       :note,
-      :image
+      :image,
     ).to_params
   end
 end

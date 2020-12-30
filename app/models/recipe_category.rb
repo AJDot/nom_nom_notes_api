@@ -11,7 +11,7 @@ class RecipeCategory < ApplicationRecord
       :client_id,
       :_destroy,
       :recipe_id,
-      :category_id
+      :category_id,
     ).to_params
   end
 end
