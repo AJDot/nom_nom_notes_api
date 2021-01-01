@@ -27,7 +27,7 @@ module Api
 
       def update
         if @recipe.update(recipe_params)
-          render json: @recipe
+          render json: @recipe, status: :ok
         else
           render json: { error: @recipe.errors.full_messages }, status: :unprocessable_entity
         end
@@ -35,7 +35,7 @@ module Api
 
       def destroy
         if @recipe.destroy
-          render json: @recipe
+          render json: @recipe, status: :no_content
         else
           render json: { error: @recipe.errors.full_messages }, status: :unprocessable_entity
         end
