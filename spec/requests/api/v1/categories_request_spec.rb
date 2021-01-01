@@ -33,9 +33,9 @@ RSpec.describe 'Api::V1::Categories', type: :request do
               query: {
                 term: 'B',
                 not: {
-                  client_id: [Category.find_by(name: 'BB').client_id]
-                }
-              }
+                  client_id: [Category.find_by(name: 'BB').client_id],
+                },
+              },
             }
         expect(response.content_type).to eq(json_content_type)
         expect(response).to have_http_status(:ok)

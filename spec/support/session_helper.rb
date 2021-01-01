@@ -10,7 +10,7 @@ module SessionHelper
   def session_headers
     {
       'ACCEPT' => 'application/json',
-      'X-CSRF-TOKEN' => response.parsed_body['csrf']
+      'X-CSRF-TOKEN' => response.parsed_body['csrf'],
     }
   end
 
