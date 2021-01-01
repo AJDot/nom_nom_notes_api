@@ -26,6 +26,9 @@ Style/SlicingWithRange:
 Style/TrailingCommaInArguments:
   Enabled: true
   EnforcedStyleForMultiline: consistent_comma
+Style/TrailingCommaInArrayLiteral:
+  Enabled: true
+  EnforcedStyleForMultiline: consistent_comma
 
 Metrics/BlockLength:
   Exclude:

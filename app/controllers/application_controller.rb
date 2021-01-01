@@ -21,7 +21,7 @@ class ApplicationController < ActionController::API
     params.require(:query).permit(
       :term,
       not: [
-        client_id: []
+        client_id: [],
       ],
     )
   end
