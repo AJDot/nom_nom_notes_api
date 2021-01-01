@@ -3,6 +3,7 @@
 # Help with sessions, sign in/out/up
 module SessionHelper
   def sign_in(payload)
+    payload = payload.slice(:email, :password) if payload.is_a?(User)
     post '/signin', params: payload
   end
 

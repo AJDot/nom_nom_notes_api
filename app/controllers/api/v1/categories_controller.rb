@@ -14,7 +14,7 @@ module Api
         else
           @categories = @categories.all
         end
-        render json: @categories
+        render json: @categories, status: :ok
       end
     end
   end

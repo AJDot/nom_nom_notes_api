@@ -6,9 +6,9 @@ module ClientId
 
   included do
     before_create :set_client_id
+  end
 
-    def set_client_id
-      self.client_id ||= SecureRandom.uuid
-    end
+  def set_client_id
+    self.client_id ||= SecureRandom.uuid
   end
 end
