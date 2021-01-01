@@ -116,6 +116,85 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
         expect(response).to have_http_status(:unprocessable_entity)
         expect(subject.reload.name).to eq(old_name)
       end
+
+      context 'with relational data' do
+        it 'allows updating relationships' do
+          ing_client_id = SecureRandom.uuid
+          step_1_client_id = SecureRandom.uuid
+          step_2_client_id = SecureRandom.uuid
+          cat = create(:category, :default)
+          patch "/api/v1/recipes/#{subject.client_id}",
+                params: {
+                  recipe: {
+                    name: 'Something else',
+                    ingredients: [
+                      {
+                        client_id: ing_client_id,
+                        description: 'An ingredient',
+                        recipe_id: subject.client_id,
+                      },
+                    ],
+                    steps: [
+                      {
+                        client_id: step_1_client_id,
+                        description: 'Step 1',
+                        recipe_id: subject.client_id,
+                      },
+                      {
+                        client_id: step_2_client_id,
+                        description: 'Step 2',
+                        recipe_id: subject.client_id,
+                      },
+                    ],
+                    recipe_categories: [
+                      {
+                        client_id: SecureRandom.uuid,
+                        recipe_id: subject.client_id,
+                        category_id: cat.client_id,
+                      },
+                    ],
+                  },
+                },
+                headers: session_headers
+          expect(response.content_type).to eq(json_content_type)
+          expect(response).to have_http_status(:ok)
+          expect(Ingredient.first.as_json.slice('client_id', 'description', 'recipe_id')).to(
+            eq(
+              {
+                'client_id' => ing_client_id,
+                'description' => 'An ingredient',
+                'recipe_id' => subject.client_id,
+              },
+            ),
+          )
+          expect(Step.first.as_json.slice('client_id', 'description', 'recipe_id')).to(
+            eq(
+              {
+                'client_id' => step_1_client_id,
+                'description' => 'Step 1',
+                'recipe_id' => subject.client_id,
+              },
+            ),
+          )
+          expect(Step.second.as_json.slice('client_id', 'description', 'recipe_id')).to(
+            eq(
+              {
+                'client_id' => step_2_client_id,
+                'description' => 'Step 2',
+                'recipe_id' => subject.client_id,
+              },
+            ),
+          )
+          expect(RecipeCategory.first.as_json.slice('category_id', 'recipe_id')).to(
+            eq(
+              {
+                'category_id' => cat.client_id,
+                'recipe_id' => subject.client_id,
+              },
+            ),
+          )
+        end
+      end
     end
   end
 
