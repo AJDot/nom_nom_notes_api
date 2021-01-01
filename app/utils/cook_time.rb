@@ -15,10 +15,6 @@ class CookTime
     @minutes = '0' if minutes.empty?
   end
 
-  def form_hh_mm
-    "#{hours} h #{minutes} m"
-  end
-
   def to_s
     @interval
   end
