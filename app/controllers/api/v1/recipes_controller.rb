@@ -10,7 +10,7 @@ module Api
 
       def index
         @recipes = Recipe.all
-        render json: @recipes, include: %w[steps ingredients categories recipe_categories]
+        render json: @recipes, include: %w[steps ingredients categories recipe_categories], status: :ok
       end
 
       def show
