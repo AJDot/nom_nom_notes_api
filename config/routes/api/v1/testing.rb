@@ -11,6 +11,7 @@ if Rails.env.test?
         end
 
         resources :recipes, only: [:create]
+        resources :categories, only: [:create]
       end
     end
   end
