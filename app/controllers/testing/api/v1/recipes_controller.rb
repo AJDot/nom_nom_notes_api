@@ -6,9 +6,10 @@ module Testing
       # Internal test api for affecting Recipes
       class RecipesController < ApplicationController
         def create
-          Recipe.create(params[:recipe].permit!)
-          Recipe.create(params[:recipes].map(&:permit!))
-          render status: :ok
+          recipes = []
+          recipes << Recipe.create(params[:recipe].permit!) if params[:recipe]
+          recipes += Recipe.create(params[:recipes].map(&:permit!)) if params[:recipes]
+          render json: recipes, status: :ok
         end
       end
     end
