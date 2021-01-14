@@ -10,6 +10,7 @@ if Rails.env.test?
           end
         end
 
+        resources :users, only: [:create]
         resources :recipes, only: [:create]
         resources :categories, only: [:create]
       end

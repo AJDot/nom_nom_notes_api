@@ -8,7 +8,7 @@ class SignupController < ApplicationController
     if user.save
       authenticate_and_sign_up(user)
     else
-      render json: { error: user.errors.full_messages.join(' ') }, status: :unprocessable_entity
+      render json: { error: user.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
