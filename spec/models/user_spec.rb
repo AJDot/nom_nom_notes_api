@@ -7,8 +7,8 @@ RSpec.describe User, type: :model do
   subject do
     described_class.new(
       email: 'a@a.a',
-      password: 'Ta123456',
-      password_confirmation: 'Ta123456',
+      password: 'ah123456',
+      password_confirmation: 'ah123456',
     )
   end
 
