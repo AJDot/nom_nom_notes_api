@@ -5,13 +5,13 @@ require 'rails_helper'
 RSpec.describe RegexUtil, type: :util do
   describe 'EMAIL' do
     it 'matches emails' do
-      %w[a@a.a bob@vance.com b.o.b@vance.net 2@vance.com].each do |text|
+      %w[a@a.a philip@fry.futurama f.r.y@philip.net 2@fry.com].each do |text|
         expect(described_class::EMAIL).to match(text)
       end
     end
 
     it 'does not match non-emails' do
-      %w[aa.a bob@vancecom bob bob@vance.4 2@4.8].each do |text|
+      %w[aa.a philip@frycom fry fry@philip.4 2@4.8].each do |text|
         expect(described_class::EMAIL).to_not match(text)
       end
     end

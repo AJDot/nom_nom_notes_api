@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :user do
     trait :default do
-      email { 'bob@vance.com' }
+      email { 'philip@fry.futurama' }
       password { 'ah123456' }
       password_confirmation { password }
     end

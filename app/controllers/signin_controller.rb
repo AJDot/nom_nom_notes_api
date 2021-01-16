@@ -9,7 +9,7 @@ class SigninController < ApplicationController
     if user.present?
       authenticate_and_sign_in(user)
     else
-      not_found
+      handle_errors
     end
   end
 
@@ -26,7 +26,9 @@ class SigninController < ApplicationController
   end
 
   def authenticate_and_sign_in(user)
-    if user.authenticate(params[:password])
+    if params[:password].blank?
+      blank_password
+    elsif user.authenticate(params[:password])
       sess_util = SessionUtil.new
       sess_util.build_session({ user_id: user.id })
       sess_util.login
@@ -34,6 +36,28 @@ class SigninController < ApplicationController
       render json: { csrf: sess_util.tokens[:csrf] }
     else
       not_authorized
+    end
+  end
+
+  def blank_email
+    render json: { error: 'Email can\'t be blank' }, status: :unprocessable_entity
+  end
+
+  def invalid_email
+    render json: { error: 'Email is invalid' }, status: :unprocessable_entity
+  end
+
+  def blank_password
+    render json: { error: 'Password can\'t be blank' }, status: :unprocessable_entity
+  end
+
+  def handle_errors
+    if params[:email].blank?
+      blank_email
+    elsif !params[:email].match?(RegexUtil::EMAIL)
+      invalid_email
+    else
+      not_found
     end
   end
 end
