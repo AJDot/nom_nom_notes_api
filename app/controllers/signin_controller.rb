@@ -29,11 +29,7 @@ class SigninController < ApplicationController
     if params[:password].blank?
       blank_password
     elsif user.authenticate(params[:password])
-      sess_util = SessionUtil.new
-      sess_util.build_session({ user_id: user.id })
-      sess_util.login
-      sess_util.set_cookie(response)
-      render json: { csrf: sess_util.tokens[:csrf] }
+      sign_in(user)
     else
       not_authorized
     end
@@ -59,5 +55,13 @@ class SigninController < ApplicationController
     else
       not_found
     end
+  end
+
+  def sign_in(user)
+    sess_util = SessionUtil.new
+    sess_util.build_session({ user_id: user.id })
+    sess_util.login
+    sess_util.set_cookie(response)
+    render json: { csrf: sess_util.tokens[:csrf] }
   end
 end
