@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
-GIT_DIR=$(git rev-parse --git-dir)
-
+pushd .git/hooks
 echo "Installing hooks..."
 # this command creates symlink to our pre-commit script
-rm $GIT_DIR/hooks/pre-commit
-ln -s ../../scripts/pre-commit.sh $GIT_DIR/hooks/pre-commit
-rm $GIT_DIR/hooks/pre-push
-ln -s ../../scripts/pre-push.sh $GIT_DIR/hooks/pre-push
+ln -sv ../../scripts/pre-commit.rb pre-commit
+ln -sv ../../scripts/pre-push.rb pre-push
+ln -sv ../../scripts/commit-msg.rb commit-msg
 echo "Done!"
+popd
