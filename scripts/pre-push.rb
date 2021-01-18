@@ -2,5 +2,5 @@
 # frozen_string_literal: true
 
 puts 'Running pre-push hook'
-
-puts 'Nothing to run...'
+status = system('./scripts/run-tests.rb')
+raise StandardError, 'pre-push checks failed!' unless status
