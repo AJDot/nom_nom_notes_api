@@ -19,17 +19,17 @@ unless message.match(COMMIT_REGEX) || message.match(MERGE_REGEX)
     #{spec_path}
 
 
-    feat|fix|docs|style|refactor|test|wip
+    #{COMMIT_REGEX} || #{MERGE_REGEX}
     ☠☠☠☠☠☠☠☠☠☠☠☠☠☠☠☠☠☠☠☠☠☠☠☠☠☠☠☠☠☠☠☠☠
     Example Commit Message:
   TEXT
   print <<~TEXT
-    Header:   |  feat(cat builder): Add New Layout Section
+    Header:   |  feat(cat-builder): Add New Layout Section
     (empty)   |
     Body:     |  Add workarea, config, and control panels
               |  Add basic drag and drop for initial elements    
     (empty)   |
-    Footer:   |  pt: [ #1928271 ]
+    Footer:   |  [ch101]
   TEXT
   exit 1
 end
