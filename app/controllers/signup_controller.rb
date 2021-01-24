@@ -15,7 +15,7 @@ class SignupController < ApplicationController
   private
 
   def user_params
-    params.permit(:email, :password, :password_confirmation)
+    params.permit(:email, :password, :password_confirmation, :username)
   end
 
   def authenticate_and_sign_up(user)
@@ -23,6 +23,6 @@ class SignupController < ApplicationController
     sess_util.build_session({ user_id: user.id })
     sess_util.login
     sess_util.set_cookie(response)
-    render json: { csrf: sess_util.tokens[:csrf] }
+    render json: { csrf: sess_util.tokens[:csrf] }, status: :created
   end
 end
