@@ -7,9 +7,20 @@ module Testing
       class UsersController < ApplicationController
         def create
           users = []
-          users << User.create(params[:user].permit!) if params[:user]
-          users += User.create(params[:users].map(&:permit!)) if params[:users]
-          render json: users, status: :ok
+          users += create_users_from_params(params[:user])
+          users += create_users_from_params(params[:users])
+          render json: users, status: users.all?(&:valid?) ? :ok : :unprocessable_entity
+        end
+
+        private
+
+        def create_users_from_params(*user_params)
+          user_params.compact!
+          if user_params
+            Array.wrap(User.create(user_params.map(&:permit!)))
+          else
+            []
+          end
         end
       end
     end

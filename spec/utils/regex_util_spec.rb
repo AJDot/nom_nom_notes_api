@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe RegexUtil, type: :util do
   describe 'EMAIL' do
     it 'matches emails' do
-      %w[a@a.a philip@fry.futurama f.r.y@philip.net 2@fry.com].each do |text|
+      %w[a@a.a philip.fry@planet-express.com f.r.y@philip.net 2@fry.com].each do |text|
         expect(described_class::EMAIL).to match(text)
       end
     end

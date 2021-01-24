@@ -6,4 +6,5 @@ class User < ApplicationRecord
 
   validates :password_confirmation, presence: true
   validates :email, presence: true, uniqueness: { case_sensitive: false }, format: { with: RegexUtil::EMAIL }
+  validates :username, presence: true, uniqueness: { case_sensitive: false }
 end
