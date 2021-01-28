@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   draw 'api/v1/testing'
 
   concern :api_base do
+    resource :current_user, controller: :current_user, only: %i[show]
     resources :recipes, only: %i[index show update create destroy]
     resources :categories, only: [:index]
   end
