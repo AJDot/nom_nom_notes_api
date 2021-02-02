@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     resource :current_user, controller: :current_user, only: %i[show]
     resources :recipes, only: %i[index show update create destroy]
     resources :categories, only: [:index]
+    mount Flipper::Api.app(Flipper) => '/flipper/api'
   end
 
   namespace :api do

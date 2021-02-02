@@ -61,6 +61,9 @@
     <orderEntry type="library" scope="PROVIDED" name="faker (v2.10.2, rbenv: 2.6.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="ffi (v1.13.1, rbenv: 2.6.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="figaro (v1.2.0, rbenv: 2.6.2) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="flipper (v0.20.3, rbenv: 2.6.2) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="flipper-active_record (v0.20.3, rbenv: 2.6.2) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="flipper-api (v0.20.3, rbenv: 2.6.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="fog-aws (v3.5.2, rbenv: 2.6.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="fog-core (v2.2.0, rbenv: 2.6.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="fog-json (v1.2.0, rbenv: 2.6.2) [gem]" level="application" />
@@ -142,6 +145,8 @@
         <option value="application_record" />
         <option value="channel" />
         <option value="controller" />
+        <option value="factory_bot:model" />
+        <option value="flipper:active_record" />
         <option value="generator" />
         <option value="integration_test" />
         <option value="job" />
@@ -149,7 +154,24 @@
         <option value="mailer" />
         <option value="migration" />
         <option value="model" />
+        <option value="pg_search:migration:dmetaphone" />
+        <option value="pg_search:migration:multisearch" />
         <option value="resource" />
+        <option value="rspec:channel" />
+        <option value="rspec:controller" />
+        <option value="rspec:feature" />
+        <option value="rspec:generator" />
+        <option value="rspec:helper" />
+        <option value="rspec:install" />
+        <option value="rspec:integration" />
+        <option value="rspec:job" />
+        <option value="rspec:mailbox" />
+        <option value="rspec:mailer" />
+        <option value="rspec:model" />
+        <option value="rspec:request" />
+        <option value="rspec:scaffold" />
+        <option value="rspec:system" />
+        <option value="rspec:view" />
         <option value="scaffold" />
         <option value="scaffold_controller" />
         <option value="serializer" />
@@ -167,6 +189,7 @@
         <option value="test_unit:plugin" />
         <option value="test_unit:scaffold" />
         <option value="test_unit:system" />
+        <option value="uploader" />
       </list>
     </option>
     <option name="myGenerators">
@@ -177,6 +200,8 @@
         <option value="application_record" />
         <option value="channel" />
         <option value="controller" />
+        <option value="factory_bot:model" />
+        <option value="flipper:active_record" />
         <option value="generator" />
         <option value="integration_test" />
         <option value="job" />
@@ -184,7 +209,24 @@
         <option value="mailer" />
         <option value="migration" />
         <option value="model" />
+        <option value="pg_search:migration:dmetaphone" />
+        <option value="pg_search:migration:multisearch" />
         <option value="resource" />
+        <option value="rspec:channel" />
+        <option value="rspec:controller" />
+        <option value="rspec:feature" />
+        <option value="rspec:generator" />
+        <option value="rspec:helper" />
+        <option value="rspec:install" />
+        <option value="rspec:integration" />
+        <option value="rspec:job" />
+        <option value="rspec:mailbox" />
+        <option value="rspec:mailer" />
+        <option value="rspec:model" />
+        <option value="rspec:request" />
+        <option value="rspec:scaffold" />
+        <option value="rspec:system" />
+        <option value="rspec:view" />
         <option value="scaffold" />
         <option value="scaffold_controller" />
         <option value="serializer" />
@@ -202,6 +244,7 @@
         <option value="test_unit:plugin" />
         <option value="test_unit:scaffold" />
         <option value="test_unit:system" />
+        <option value="uploader" />
       </list>
     </option>
   </component>
@@ -370,8 +413,28 @@
             </subtasks>
           </RakeTaskImpl>
           <RakeTaskImpl description="Prints out your Rack middleware stack" fullCommand="middleware" id="middleware" />
+          <RakeTaskImpl id="pg_search">
+            <subtasks>
+              <RakeTaskImpl id="multisearch">
+                <subtasks>
+                  <RakeTaskImpl description="Rebuild PgSearch multisearch records for a given model" fullCommand="pg_search:multisearch:rebuild[model,schema]" id="rebuild[model,schema]" />
+                  <RakeTaskImpl description="" fullCommand="pg_search:multisearch:rebuild" id="rebuild" />
+                </subtasks>
+              </RakeTaskImpl>
+            </subtasks>
+          </RakeTaskImpl>
           <RakeTaskImpl description="Restart app by touching tmp/restart.txt" fullCommand="restart" id="restart" />
           <RakeTaskImpl description="Generate a cryptographically secure secret key (this is typically used to generate a secret for cookie sessions)" fullCommand="secret" id="secret" />
+          <RakeTaskImpl description="Run all specs in spec directory (excluding plugin specs)" fullCommand="spec" id="spec" />
+          <RakeTaskImpl id="spec">
+            <subtasks>
+              <RakeTaskImpl description="Run the code examples in spec/models" fullCommand="spec:models" id="models" />
+              <RakeTaskImpl description="Run the code examples in spec/requests" fullCommand="spec:requests" id="requests" />
+              <RakeTaskImpl description="Run the code examples in spec/utils" fullCommand="spec:utils" id="utils" />
+              <RakeTaskImpl description="" fullCommand="spec:prepare" id="prepare" />
+              <RakeTaskImpl description="" fullCommand="spec:statsetup" id="statsetup" />
+            </subtasks>
+          </RakeTaskImpl>
           <RakeTaskImpl description="Report code statistics (KLOCs, etc) from the application or engine" fullCommand="stats" id="stats" />
           <RakeTaskImpl description="Runs all tests in test folder except system ones" fullCommand="test" id="test" />
           <RakeTaskImpl id="test">
