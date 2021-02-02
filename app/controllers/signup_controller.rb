@@ -4,11 +4,15 @@
 # Creates user and session upon success
 class SignupController < ApplicationController
   def create
-    user = User.new(user_params)
-    if user.save
-      authenticate_and_sign_up(user)
+    if Flipper.enabled?(:signup)
+      user = User.new(user_params)
+      if user.save
+        authenticate_and_sign_up(user)
+      else
+        render json: { error: user.errors.full_messages }, status: :unprocessable_entity
+      end
     else
-      render json: { error: user.errors.full_messages }, status: :unprocessable_entity
+      render status: :forbidden
     end
   end
 
