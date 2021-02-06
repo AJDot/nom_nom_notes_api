@@ -21,6 +21,8 @@ Style/HashTransformKeys:
   Enabled: true
 Style/HashTransformValues:
   Enabled: true
+Style/ModuleFunction:
+  Enabled: false
 Style/SlicingWithRange:
   Enabled: true
 Style/TrailingCommaInArguments:
