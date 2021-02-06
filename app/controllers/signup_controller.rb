@@ -4,7 +4,7 @@
 # Creates user and session upon success
 class SignupController < ApplicationController
   def create
-    if Flipper.enabled?(:signup)
+    if FeatureService.enabled?(:signup)
       user = User.new(user_params)
       if user.save
         authenticate_and_sign_up(user)
@@ -12,7 +12,7 @@ class SignupController < ApplicationController
         render json: { error: user.errors.full_messages }, status: :unprocessable_entity
       end
     else
-      render status: :forbidden
+      render json: { error: '', message: ''}, status: :forbidden
     end
   end
 

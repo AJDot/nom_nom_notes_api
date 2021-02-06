@@ -4,6 +4,10 @@ require 'rails_helper'
 
 RSpec.describe 'Signups', type: :request do
   describe '#create' do
+    before do
+      FeatureService.enable(:signup)
+    end
+
     let(:signup_params) do
       {
         email: 'philip.fry@planet-express.com',
@@ -18,8 +22,8 @@ RSpec.describe 'Signups', type: :request do
         post '/signup', params: signup_params
       end.to(change { User.count }.by(1))
 
-      expect(response.content_type).to eq(json_content_type)
       expect(response).to have_http_status(:created)
+      expect(response.content_type).to eq(json_content_type)
     end
 
     it 'does not allow signup without valid username' do
@@ -28,8 +32,19 @@ RSpec.describe 'Signups', type: :request do
         post '/signup', params: signup_params
       end.to_not(change { User.count })
 
-      expect(response.content_type).to eq(json_content_type)
       expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.content_type).to eq(json_content_type)
+    end
+
+    it 'does not allow signup when feature is disabled' do
+      FeatureService[:signup].disable
+
+      expect do
+        post '/signup', params: signup_params
+      end.to_not(change { User.count })
+
+      expect(response).to have_http_status(:forbidden)
+      expect(response.content_type).to eq(json_content_type)
     end
   end
 end
