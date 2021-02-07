@@ -13,6 +13,7 @@ if Rails.env.test?
         resources :users, only: [:create]
         resources :recipes, only: [:create]
         resources :categories, only: [:create]
+        resources :features, only: %i[create destroy]
       end
     end
   end
