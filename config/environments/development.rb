@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 Rails.application.configure do
+  require 'nom_nom_notes_api/config'
+  # Set up basic authentication for admins
+  NomNomNotesApi::Config.use_admin_auth(config.middleware)
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded on

@@ -6,6 +6,10 @@
 # and recreated between test runs. Don't rely on the data there!
 
 Rails.application.configure do
+  require 'nom_nom_notes_api/config'
+  # Set up basic authentication for admins
+  NomNomNotesApi::Config.use_admin_auth(config.middleware)
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   config.cache_classes = false
@@ -23,7 +27,7 @@ Rails.application.configure do
   }
 
   # Show full error reports and disable caching.
-  config.consider_all_requests_local       = true
+  config.consider_all_requests_local = true
   config.action_controller.perform_caching = false
   config.cache_store = :null_store
 
