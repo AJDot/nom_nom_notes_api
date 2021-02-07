@@ -4,7 +4,8 @@
 # Creates user and session upon success
 class SignupController < ApplicationController
   def create
-    if FeatureService.enabled?(:signup)
+    service = Features::Service.new
+    if service.enabled?(:signup)
       user = User.new(user_params)
       if user.save
         authenticate_and_sign_up(user)
@@ -12,7 +13,7 @@ class SignupController < ApplicationController
         render json: { error: user.errors.full_messages }, status: :unprocessable_entity
       end
     else
-      render json: { error: '', message: ''}, status: :forbidden
+      render json: { error: service.error(:signup) }, include: :report, status: :forbidden
     end
   end
 

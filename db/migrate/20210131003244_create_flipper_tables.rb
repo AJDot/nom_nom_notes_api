@@ -2,7 +2,6 @@
 
 # Add database requirements for Flipper
 class CreateFlipperTables < ActiveRecord::Migration[6.0]
-  # rubocop:disable Metrics/MethodLength
   def self.up
     create_table :flipper_features do |t|
       t.string :key, null: false
@@ -18,8 +17,6 @@ class CreateFlipperTables < ActiveRecord::Migration[6.0]
     end
     add_index :flipper_gates, %i[feature_key key value], unique: true
   end
-
-  # rubocop:enable Metrics/MethodLength
 
   def self.down
     drop_table :flipper_gates
