@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe 'Signups', type: :request do
   describe '#create' do
     before do
-      Features::Service.enable(:signup)
+      Features::Service.new.enable(:signup)
     end
 
     let(:signup_params) do
@@ -37,7 +37,7 @@ RSpec.describe 'Signups', type: :request do
     end
 
     it 'does not allow signup when feature is disabled' do
-      Features::Service[:signup].disable
+      Features::Service.new[:signup].disable
 
       expect do
         post '/signup', params: signup_params

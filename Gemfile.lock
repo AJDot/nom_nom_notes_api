@@ -102,6 +102,11 @@ GEM
     flipper-api (0.20.3)
       flipper (~> 0.20.3)
       rack (>= 1.4, < 3)
+    flipper-ui (0.20.3)
+      erubi (>= 1.0.0, < 2.0.0)
+      flipper (~> 0.20.3)
+      rack (>= 1.4, < 3)
+      rack-protection (>= 1.5.3, < 2.2.0)
     fog-aws (3.5.2)
       fog-core (~> 2.1)
       fog-json (~> 1.1)
@@ -168,6 +173,8 @@ GEM
     rack (2.2.3)
     rack-cors (1.1.1)
       rack (>= 2.0.0)
+    rack-protection (2.1.0)
+      rack
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rails (6.0.3.4)
@@ -270,6 +277,7 @@ DEPENDENCIES
   figaro
   flipper-active_record
   flipper-api
+  flipper-ui
   fog-aws
   jwt_sessions (~> 2.3)
   listen (~> 3.2)

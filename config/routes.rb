@@ -8,6 +8,13 @@ Rails.application.routes.draw do
     resources :recipes, only: %i[index show update create destroy]
     resources :categories, only: [:index]
     mount Flipper::Api.app(Flipper) => '/flipper/api'
+    # flipper_auth_app = Flipper::UI.app(Flipper.instance)
+    flipper_auth_app = Flipper::UI.app(Flipper.instance) do |builder|
+      builder.use Rack::Auth::Basic do |username, password|
+        username == ENV.fetch('FLIPPER_USERNAME') && password == ENV.fetch('FLIPPER_SECRET')
+      end
+    end
+    mount flipper_auth_app, at: '/flipper'
   end
 
   namespace :api do
