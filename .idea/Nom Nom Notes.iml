@@ -75,6 +75,7 @@
     <orderEntry type="library" scope="PROVIDED" name="image_processing (v1.10.3, rbenv: 2.6.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="ipaddress (v0.8.3, rbenv: 2.6.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="jsonapi-renderer (v0.2.2, rbenv: 2.6.2) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="jwe (v0.4.0, rbenv: 2.6.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="jwt (v2.2.2, rbenv: 2.6.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="jwt_sessions (v2.5.2, rbenv: 2.6.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="listen (v3.3.1, rbenv: 2.6.2) [gem]" level="application" />
@@ -430,6 +431,7 @@
           <RakeTaskImpl description="Run all specs in spec directory (excluding plugin specs)" fullCommand="spec" id="spec" />
           <RakeTaskImpl id="spec">
             <subtasks>
+              <RakeTaskImpl description="Run the code examples in spec/mailers" fullCommand="spec:mailers" id="mailers" />
               <RakeTaskImpl description="Run the code examples in spec/models" fullCommand="spec:models" id="models" />
               <RakeTaskImpl description="Run the code examples in spec/requests" fullCommand="spec:requests" id="requests" />
               <RakeTaskImpl description="Run the code examples in spec/utils" fullCommand="spec:utils" id="utils" />

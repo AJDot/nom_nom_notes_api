@@ -1,29 +1,15 @@
 # README
 
-Start postgres server
+## Start postgres server
+
 ```bash
 pg_ctl -D /usr/local/var/postgres start
 ```
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Token Generation
 
-Things you may want to cover:
+secret_tokenizer_base:
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```ruby
+SecureRandom.base64(10)
+```

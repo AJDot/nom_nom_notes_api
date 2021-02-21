@@ -3,6 +3,8 @@
 # A User of the site
 class User < ApplicationRecord
   has_secure_password
+  include Recoverable
+  token_payload_keys :email
 
   validates :password, confirmation: true, unless: -> { password.blank? }
   validates :password_confirmation, presence: true, unless: -> { password.blank? }

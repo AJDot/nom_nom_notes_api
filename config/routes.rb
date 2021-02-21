@@ -7,6 +7,12 @@ Rails.application.routes.draw do
     resource :current_user, controller: :current_user, only: %i[show]
     resources :recipes, only: %i[index show update create destroy]
     resources :categories, only: [:index]
+
+    resource :password, controller: :passwords do
+      collection do
+        put :forgot
+      end
+    end
   end
 
   namespace :api do
