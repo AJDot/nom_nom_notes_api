@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/BlockLength
 Rails.application.configure do
   require 'nom_nom_notes_api/config'
   # Set up basic authentication for admins
@@ -61,6 +62,23 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
+  config.action_mailer.asset_host = "https://#{Figaro.env.host_url}"
+  config.action_mailer.default_url_options = { host: Figaro.env.host_url, sender_from: 'support@one-guy.com' }
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.default charset: 'utf-8'
+
+  config.action_mailer.smtp_settings = {
+    address: Figaro.env.smtp_address || 'smtp.gmail.com',
+    port: Figaro.env.smtp_port || 587,
+    domain: Figaro.env.smtp_domain,
+    authentication: 'plain',
+    enable_starttls_auto: true,
+    user_name: Figaro.env.smtp_user_name,
+    password: Figaro.env.smtp_password,
+  }
+
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
@@ -109,3 +127,4 @@ Rails.application.configure do
   # config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
 end
+# rubocop:enable Metrics/BlockLength

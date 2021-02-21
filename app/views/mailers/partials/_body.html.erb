@@ -1,0 +1,13 @@
+<body>
+<table style="min-width: 320px; max-width: 600px; border-collapse: collapse;">
+  <thead>
+  <%= render "mailers/partials/header" %>
+  </thead>
+  <tbody>
+  <%= yield %>
+  </tbody>
+  <tfoot>
+  <%= render 'mailers/partials/footer' %>
+  </tfoot>
+</table>
+</body>
