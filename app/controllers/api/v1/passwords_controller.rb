@@ -19,14 +19,14 @@ module Api
         render status: :no_content
       end
 
+      def change
+        error = change_password_error
+        return render error if error
+
+        change_password
+      end
+
       private
-
-      def change_password
-        token = params[:token].to_s
-
-        return render json: { error: 'Token not present' }, status: :unprocessable_entity if params[:email].blank?
-
-        user = User.find_by(reset_password_token: token)
 
       def forgot_password_error
         return { json: { error: ['Email not found.'] }, status: :not_found } if params[:email].blank?
@@ -35,6 +35,28 @@ module Api
         return { json: { error: ['Account not found.'] }, status: :not_found } if user.blank?
 
         nil
+      end
+
+      def change_password_error
+        token = params[:token].to_s
+
+        return { json: { error: 'Token not present' }, status: :unprocessable_entity } if token.blank?
+
+        self.current_user = user = User.find_by(reset_password_token: token)
+
+        unless user.present? && user.password_token_valid?
+          return { json: { error: ['Link not valid or expired.'] }, status: :not_found }
+        end
+
+        nil
+      end
+
+      def change_password
+        unless current_user.reset_password!(params[:password], params[:password_confirmation])
+          return render json: { error: current_user.errors.full_messages }, status: :unprocessable_entity
+        end
+
+        render status: :ok
       end
     end
   end

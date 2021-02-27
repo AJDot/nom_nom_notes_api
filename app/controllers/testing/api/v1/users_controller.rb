@@ -12,6 +12,12 @@ module Testing
           render json: users, status: users.all?(&:valid?) ? :ok : :unprocessable_entity
         end
 
+        def update
+          user = User.find_by(id: params[:id])
+          user.update(params[:user].permit!)
+          render json: user, status: user.valid? ? :ok : :unprocessable_entity
+        end
+
         private
 
         def create_users_from_params(*user_params)

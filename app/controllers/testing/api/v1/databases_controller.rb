@@ -8,6 +8,7 @@ module Testing
         def clean
           DatabaseCleaner.strategy = :truncation
           DatabaseCleaner.clean
+          ActionMailer::Base.deliveries = []
         end
       end
     end
