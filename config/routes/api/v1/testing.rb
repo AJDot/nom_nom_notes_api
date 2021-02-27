@@ -19,6 +19,11 @@ if Rails.env.test?
             put :forgot
           end
         end
+        resources :mail, only: [:index] do
+          member do
+            get :link
+          end
+        end
       end
     end
   end
