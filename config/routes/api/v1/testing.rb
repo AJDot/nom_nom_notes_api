@@ -10,10 +10,15 @@ if Rails.env.test?
           end
         end
 
-        resources :users, only: [:create]
+        resources :users, only: %i[create update]
         resources :recipes, only: [:create]
         resources :categories, only: [:create]
         resources :features, only: %i[create destroy]
+        resource :password, controller: :passwords do
+          collection do
+            put :forgot
+          end
+        end
       end
     end
   end

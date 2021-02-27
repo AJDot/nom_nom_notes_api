@@ -8,9 +8,10 @@ Rails.application.routes.draw do
     resources :recipes, only: %i[index show update create destroy]
     resources :categories, only: [:index]
 
-    resource :password, controller: :passwords do
+    resource :password, controller: :passwords, only: [] do
       collection do
         put :forgot
+        put :change
       end
     end
   end
