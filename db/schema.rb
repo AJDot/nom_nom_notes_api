@@ -65,8 +65,8 @@ ActiveRecord::Schema.define(version: 2021_02_15_162357) do
     t.text "description"
     t.interval "cook_time"
     t.text "note"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.string "image"
   end
 
@@ -74,8 +74,8 @@ ActiveRecord::Schema.define(version: 2021_02_15_162357) do
     t.uuid "recipe_id", null: false
     t.uuid "client_id"
     t.text "description", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.integer "sort_order"
     t.index ["recipe_id"], name: "index_steps_on_recipe_id"
   end
@@ -86,8 +86,8 @@ ActiveRecord::Schema.define(version: 2021_02_15_162357) do
     t.string "last_name"
     t.string "email"
     t.string "password_digest"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.string "username"
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
