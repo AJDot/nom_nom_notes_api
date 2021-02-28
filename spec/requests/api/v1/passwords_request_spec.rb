@@ -45,7 +45,7 @@ RSpec.describe 'Api::V1::Passwords', type: :request do
 
   describe '#change' do
     let(:user) { create(:user, :default) }
-    let(:new_password) {'fa0s98hi2nj3k4'}
+    let(:new_password) { 'fa0s98hi2nj3k4' }
     let(:params) do
       {
         token: user.reset_password_token,
