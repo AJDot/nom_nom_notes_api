@@ -42,4 +42,66 @@ RSpec.describe 'Api::V1::Passwords', type: :request do
       end
     end
   end
+
+  describe '#change' do
+    let(:user) { create(:user, :default) }
+    let(:new_password) {'fa0s98hi2nj3k4'}
+    let(:params) do
+      {
+        token: user.reset_password_token,
+        password: new_password,
+        password_confirmation: new_password,
+      }
+    end
+
+    before do
+      user.generate_password_token!
+    end
+
+    it 'changes the password when valid data is provided' do
+      expect do
+        put '/api/v1/password/change', params: params
+      end.to(
+        change { user.reload.password_digest },
+      )
+    end
+
+    it 'does not change the password when password and confirmation are blank' do
+      params.delete(:password)
+      params.delete(:password_confirmation)
+      expect do
+        put '/api/v1/password/change', params: params
+      end.to_not(
+        change { user.reload.password_digest },
+      )
+    end
+
+    it 'does not change the password when password and confirmation do not match' do
+      params[:password_confirmation] = params[:password_confirmation] + '1'
+      expect do
+        put '/api/v1/password/change', params: params
+      end.to_not(
+        change { user.reload.password_digest },
+      )
+    end
+
+    it 'does not change the password when token is expired' do
+      user.update(reset_password_sent_at: Time.now - 4.hours - 1.minute) # expiration is 4 hours
+
+      expect do
+        put '/api/v1/password/change', params: params
+      end.to_not(
+        change { user.reload.password_digest },
+      )
+    end
+
+    it 'does not change the password when token does not match any user' do
+      params[:token] = 'randomness'
+      expect do
+        put '/api/v1/password/change', params: params
+      end.to_not(
+        change { user.reload.password_digest },
+      )
+    end
+  end
 end
