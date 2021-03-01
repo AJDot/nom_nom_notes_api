@@ -2,7 +2,6 @@
 
 FactoryBot.define do
   factory :recipe_category do
-    trait :default do
-    end
+    trait :default
   end
 end
