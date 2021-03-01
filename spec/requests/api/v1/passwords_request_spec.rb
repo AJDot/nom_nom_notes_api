@@ -77,7 +77,7 @@ RSpec.describe 'Api::V1::Passwords', type: :request do
     end
 
     it 'does not change the password when password and confirmation do not match' do
-      params[:password_confirmation] = params[:password_confirmation] + '1'
+      params[:password_confirmation] = "#{params[:password_confirmation]}1"
       expect do
         put '/api/v1/password/change', params: params
       end.to_not(

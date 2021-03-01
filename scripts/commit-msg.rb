@@ -11,11 +11,11 @@ unless message.match(COMMIT_REGEX) || message.match(MERGE_REGEX)
   print <<~TEXT
     invalid commit message!
 
-    Your message: 
+    Your message:
       #{message}
 
     does not meet the commit message conventions.
-    Use the guidelines specified in 
+    Use the guidelines specified in
     #{spec_path}
 
 
@@ -27,7 +27,7 @@ unless message.match(COMMIT_REGEX) || message.match(MERGE_REGEX)
     Header:   |  feat(cat-builder): Add New Layout Section
     (empty)   |
     Body:     |  Add workarea, config, and control panels
-              |  Add basic drag and drop for initial elements    
+              |  Add basic drag and drop for initial elements
     (empty)   |
     Footer:   |  [ch101]
   TEXT
