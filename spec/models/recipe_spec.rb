@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_relative 'concerns/client_id_spec'
 
 RSpec.describe Recipe, type: :model do
-  subject do
+  subject(:recipe) do
     described_class.new(
       name: 'A Recipe',
     )
@@ -13,25 +12,52 @@ RSpec.describe Recipe, type: :model do
   it_behaves_like 'client_id'
 
   it 'is valid with valid attributes' do
-    expect(subject).to be_valid
+    expect(recipe).to be_valid
   end
 
-  it 'is not valid without a name' do
-    subject.name = nil
-    expect(subject).to_not be_valid
-    expect(subject.errors[:name]).to eq(['must be between 1 and 100 characters'])
+  context 'with invalid name' do
+    before do
+      recipe.name = nil
+    end
+
+    it 'is not valid without a name' do
+      expect(recipe).not_to be_valid
+    end
+
+    it 'reports an error for the name attribute' do
+      recipe.valid?
+      expect(recipe.errors[:name]).to eq(['must be between 1 and 100 characters'])
+    end
   end
 
-  it 'is not valid without a unique name' do
-    described_class.create(name: 'A Recipe')
-    expect(subject).to_not be_valid
-    expect(subject.errors[:name]).to eq(['must be unique'])
+  context 'without a unique name' do
+    before do
+      described_class.create(name: 'A Recipe')
+    end
+
+    it 'is not valid without a unique name' do
+      expect(recipe).not_to be_valid
+    end
+
+    it 'reports an error for the name attribute' do
+      recipe.valid?
+      expect(recipe.errors[:name]).to eq(['must be unique'])
+    end
   end
 
-  it 'is not valid without a valid length name' do
-    subject.name = 'a' * 101
-    expect(subject).to_not be_valid
-    expect(subject.errors[:name]).to eq(['must be between 1 and 100 characters'])
+  context 'without a valid length name' do
+    before do
+      recipe.name = 'a' * 101
+    end
+
+    it 'is not valid' do
+      expect(recipe).not_to be_valid
+    end
+
+    it 'reports an error for the name attribute' do
+      recipe.valid?
+      expect(recipe.errors[:name]).to eq(['must be between 1 and 100 characters'])
+    end
   end
 
   describe '.to_params' do

@@ -5,20 +5,24 @@ require 'rails_helper'
 RSpec.describe 'Api::V1::Passwords', type: :request do
   describe '#forgot' do
     context 'when email is not provided' do
+      before { put '/api/v1/password/forgot' }
+
+      include_examples 'content type', :json
+      include_examples 'http status', :not_found
+
       it 'returns email not found error' do
-        put '/api/v1/password/forgot'
-        expect(response.content_type).to eq(json_content_type)
-        expect(response).to have_http_status(:not_found)
         body = JSON.parse(response.body).deep_symbolize_keys
         expect(body).to eq(error: ['Email not found.'])
       end
     end
 
     context 'when email does not match an existing user' do
+      before { put '/api/v1/password/forgot', params: { email: 'philip.fry@planet-express.com' } }
+
+      include_examples 'content type', :json
+      include_examples 'http status', :not_found
+
       it 'returns account not found error' do
-        put '/api/v1/password/forgot', params: { email: 'philip.fry@planet-express.com' }
-        expect(response.content_type).to eq(json_content_type)
-        expect(response).to have_http_status(:not_found)
         body = JSON.parse(response.body).deep_symbolize_keys
         expect(body).to eq(error: ['Account not found.'])
       end
@@ -27,15 +31,17 @@ RSpec.describe 'Api::V1::Passwords', type: :request do
     context 'when email matches an existing user' do
       let(:user) { create(:user, :default) }
 
-      it 'returns a no content status' do
-        put '/api/v1/password/forgot', params: { email: user.email }
-        expect(response.content_type).to eq(nil)
-        expect(response).to have_http_status(:no_content)
+      before { put '/api/v1/password/forgot', params: { email: user.email } }
+
+      include_examples 'content type', nil
+      include_examples 'http status', :no_content
+
+      it 'returns no body' do
         expect(response.body).to eq('')
       end
 
       it 'sends an email' do
-        expect(Api::V1::PasswordMailer).to receive(:forgot).once.and_call_original
+        allow(Api::V1::PasswordMailer).to receive(:forgot).once.and_call_original
         expect { put '/api/v1/password/forgot', params: { email: user.email } }.to(
           change { ActionMailer::Base.deliveries.count }.by(1),
         )
@@ -71,7 +77,7 @@ RSpec.describe 'Api::V1::Passwords', type: :request do
       params.delete(:password_confirmation)
       expect do
         put '/api/v1/password/change', params: params
-      end.to_not(
+      end.not_to(
         change { user.reload.password_digest },
       )
     end
@@ -80,17 +86,17 @@ RSpec.describe 'Api::V1::Passwords', type: :request do
       params[:password_confirmation] = "#{params[:password_confirmation]}1"
       expect do
         put '/api/v1/password/change', params: params
-      end.to_not(
+      end.not_to(
         change { user.reload.password_digest },
       )
     end
 
     it 'does not change the password when token is expired' do
-      user.update(reset_password_sent_at: Time.now - 4.hours - 1.minute) # expiration is 4 hours
+      user.update(reset_password_sent_at: Time.zone.now - 4.hours - 1.minute) # expiration is 4 hours
 
       expect do
         put '/api/v1/password/change', params: params
-      end.to_not(
+      end.not_to(
         change { user.reload.password_digest },
       )
     end
@@ -99,7 +105,7 @@ RSpec.describe 'Api::V1::Passwords', type: :request do
       params[:token] = 'randomness'
       expect do
         put '/api/v1/password/change', params: params
-      end.to_not(
+      end.not_to(
         change { user.reload.password_digest },
       )
     end
