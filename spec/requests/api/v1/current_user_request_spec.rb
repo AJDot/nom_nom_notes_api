@@ -5,25 +5,31 @@ require 'rails_helper'
 RSpec.describe 'Api::V1::CurrentUser', type: :request do
   describe '#show' do
     context 'when not signed in' do
-      it 'returns forbidden' do
+      before do
         get '/api/v1/current_user'
-        expect(response.content_type).to eq(json_content_type)
-        expect(response).to have_http_status(:forbidden)
       end
+
+      include_examples 'content type', :json
+      include_examples 'http status', :forbidden
     end
 
     context 'when signed in' do
-      subject { create(:user, :default) }
+      subject(:user) { create(:user, :default) }
+
       before do
-        sign_in(subject)
+        sign_in(user)
+        get '/api/v1/current_user', headers: session_headers
       end
 
-      it 'returns the signed in user that made the request' do
-        get '/api/v1/current_user', headers: session_headers
-        expect(response.content_type).to eq(json_content_type)
-        expect(response).to have_http_status(:ok)
-        expect(response.parsed_body['data']['id']).to eq(subject.id)
-        expect(response.parsed_body['data']['attributes']['clientId']).to eq(subject.client_id)
+      include_examples 'content type', :json
+      include_examples 'http status', :ok
+
+      it 'returns the signed in user id that made the request' do
+        expect(response.parsed_body['data']['id']).to eq(user.id)
+      end
+
+      it 'returns the signed in user client_id that made the request' do
+        expect(response.parsed_body['data']['attributes']['clientId']).to eq(user.client_id)
       end
     end
   end

@@ -5,46 +5,51 @@ require 'rails_helper'
 RSpec.describe 'Api::V1::Recipes', type: :request do
   describe '#index' do
     before do
-      2.times { create(:recipe, :default) }
+      create_list(:recipe, 2, :default)
+      get '/api/v1/recipes'
     end
 
+    include_examples 'content type', :json
+    include_examples 'http status', :ok
+
     it 'allows retrieving all recipes' do
-      get '/api/v1/recipes'
-      expect(response.content_type).to eq(json_content_type)
-      expect(response).to have_http_status(:ok)
       expect(response.parsed_body['data'].count).to eq(2)
     end
   end
 
   describe '#show' do
-    subject do
+    subject(:recipe) do
       create(:recipe, :default)
     end
 
-    it 'allows viewing the recipe' do
-      get "/api/v1/recipes/#{subject.client_id}"
-      expect(response.content_type).to eq(json_content_type)
-      expect(response).to have_http_status(:ok)
-    end
+    let!(:ing) { create(:ingredient, :default, recipe: recipe) }
+    let!(:step) { create(:step, :default, recipe: recipe) }
+    let!(:cat) { create(:category, :default, recipes: [recipe]) }
 
-    it 'returns recipe data with related data' do
-      ing = create(:ingredient, :default, recipe: subject)
-      step = create(:step, :default, recipe: subject)
-      cat = create(:category, :default, recipes: [subject])
-      rec_cat = RecipeCategory.first
-      get "/api/v1/recipes/#{subject.client_id}"
-      incs = response.parsed_body['included']
-      client_ids = incs.map { |x| x['attributes']['clientId'] }
-      expect(client_ids).to include(ing.client_id, step.client_id, cat.client_id, rec_cat.client_id)
+    context 'when not signed in' do
+      before do
+        get "/api/v1/recipes/#{recipe.client_id}"
+      end
+
+      include_examples 'content type', :json
+      include_examples 'http status', :ok
+
+      it 'returns recipe data with related data' do
+        rec_cat = RecipeCategory.first
+        incs = response.parsed_body['included']
+        client_ids = incs.map { |x| x['attributes']['clientId'] }
+        expect(client_ids).to include(ing.client_id, step.client_id, cat.client_id, rec_cat.client_id)
+      end
     end
 
     context 'when signed in' do
-      it 'allows viewing the recipe' do
+      before do
         sign_in(create(:user, :default))
-        get "/api/v1/recipes/#{subject.client_id}", headers: session_headers
-        expect(response.content_type).to eq(json_content_type)
-        expect(response).to have_http_status(:ok)
+        get "/api/v1/recipes/#{recipe.client_id}", headers: session_headers
       end
+
+      include_examples 'content type', :json
+      include_examples 'http status', :ok
     end
   end
 
@@ -53,10 +58,13 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
       { recipe: { name: 'My Recipe' } }
     end
 
-    it 'forbids creating a recipe' do
-      post '/api/v1/recipes', params: recipe_params
-      expect(response.content_type).to eq(json_content_type)
-      expect(response).to have_http_status(:forbidden)
+    context 'when not signed in' do
+      before do
+        post '/api/v1/recipes', params: recipe_params
+      end
+
+      include_examples 'content type', :json
+      include_examples 'http status', :forbidden
     end
 
     context 'when signed in' do
@@ -64,29 +72,49 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
         sign_in(create(:user, :default))
       end
 
-      it 'creates a Recipe' do
-        post '/api/v1/recipes', params: recipe_params, headers: session_headers
+      context 'with valid data' do
+        it 'creates a Recipe' do
+          expect do
+            post '/api/v1/recipes', params: recipe_params, headers: session_headers
+          end.to change(Recipe, :count).by(1)
+        end
 
-        expect(response.content_type).to eq(json_content_type)
-        expect(response).to have_http_status(:created)
+        describe 'response' do
+          before do
+            post '/api/v1/recipes', params: recipe_params, headers: session_headers
+          end
+
+          include_examples 'content type', :json
+          include_examples 'http status', :created
+        end
       end
 
-      it 'returns an error when unable to create recipe' do
-        recipe_params[:recipe][:name] = ''
-        post '/api/v1/recipes', params: recipe_params, headers: session_headers
-        expect(response.parsed_body).to have_key('error')
-        expect(response).to have_http_status(:unprocessable_entity)
+      context 'when error' do
+        before do
+          recipe_params[:recipe][:name] = ''
+          post '/api/v1/recipes', params: recipe_params, headers: session_headers
+        end
+
+        include_examples 'content type', :json
+        include_examples 'http status', :unprocessable_entity
+
+        it 'returns an error' do
+          expect(response.parsed_body).to have_key('error')
+        end
       end
     end
   end
 
   describe '#update' do
-    subject { create(:recipe, :default) }
+    subject(:recipe) { create(:recipe, :default) }
 
-    it 'forbids updating a recipe' do
-      patch "/api/v1/recipes/#{subject.client_id}"
-      expect(response.content_type).to eq(json_content_type)
-      expect(response).to have_http_status(:forbidden)
+    describe 'response' do
+      before do
+        patch "/api/v1/recipes/#{recipe.client_id}"
+      end
+
+      include_examples 'content type', :json
+      include_examples 'http status', :forbidden
     end
 
     context 'when signed in' do
@@ -95,101 +123,119 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
       end
 
       def make_request
-        patch "/api/v1/recipes/#{subject.client_id}",
+        patch "/api/v1/recipes/#{recipe.client_id}",
               params: { recipe: { name: 'Something else' } },
               headers: session_headers
       end
 
-      it 'allows updating a recipe' do
-        make_request
-        expect(response.content_type).to eq(json_content_type)
-        expect(response).to have_http_status(:ok)
-        expect(subject.reload.name).to eq('Something else')
+      describe 'response' do
+        before do
+          make_request
+        end
+
+        include_examples 'content type', :json
+        include_examples 'http status', :ok
       end
 
-      it 'reports errors if there are any' do
-        # create recipe so updating subject will result in name unique error
-        old_name = subject.name
-        create(:recipe, :default, name: 'Something else')
+      it 'can update the recipe name' do
         make_request
-        expect(response.content_type).to eq(json_content_type)
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(subject.reload.name).to eq(old_name)
+        expect(recipe.reload.name).to eq('Something else')
+      end
+
+      context 'with error' do
+        let!(:old_name) { recipe.name }
+
+        before do
+          # create recipe so updating subject will result in name unique error
+          create(:recipe, :default, name: 'Something else')
+          make_request
+        end
+
+        include_examples 'content type', :json
+        include_examples 'http status', :unprocessable_entity
+
+        it 'does not update the recipe name' do
+          expect(recipe.reload.name).to eq(old_name)
+        end
       end
 
       context 'with relational data' do
-        it 'allows updating relationships' do
-          ing_client_id = SecureRandom.uuid
-          step_1_client_id = SecureRandom.uuid
-          step_2_client_id = SecureRandom.uuid
-          cat = create(:category, :default)
-          patch "/api/v1/recipes/#{subject.client_id}",
-                params: {
-                  recipe: {
-                    name: 'Something else',
-                    ingredients: [
-                      {
-                        client_id: ing_client_id,
-                        description: 'An ingredient',
-                        recipe_id: subject.client_id,
-                      },
-                    ],
-                    steps: [
-                      {
-                        client_id: step_1_client_id,
-                        description: 'Step 1',
-                        recipe_id: subject.client_id,
-                      },
-                      {
-                        client_id: step_2_client_id,
-                        description: 'Step 2',
-                        recipe_id: subject.client_id,
-                      },
-                    ],
-                    recipe_categories: [
-                      {
-                        client_id: SecureRandom.uuid,
-                        recipe_id: subject.client_id,
-                        category_id: cat.client_id,
-                      },
-                    ],
-                  },
+        let(:params) do
+          {
+            recipe: {
+              name: 'Something else',
+              ingredients: [
+                {
+                  client_id: ing_client_id,
+                  description: 'An ingredient',
+                  recipe_id: recipe.client_id,
                 },
-                headers: session_headers
-          expect(response.content_type).to eq(json_content_type)
-          expect(response).to have_http_status(:ok)
+              ],
+              steps: [
+                {
+                  client_id: step_1_client_id,
+                  description: 'Step 1',
+                  recipe_id: recipe.client_id,
+                },
+                {
+                  client_id: step_2_client_id,
+                  description: 'Step 2',
+                  recipe_id: recipe.client_id,
+                },
+              ],
+              recipe_categories: [
+                {
+                  client_id: SecureRandom.uuid,
+                  recipe_id: recipe.client_id,
+                  category_id: cat.client_id,
+                },
+              ],
+            },
+          }
+        end
+        let(:cat) { create(:category, :default) }
+        let(:ing_client_id) { SecureRandom.uuid }
+        let(:step_1_client_id) { SecureRandom.uuid }
+        let(:step_2_client_id) { SecureRandom.uuid }
+
+        before do
+          patch "/api/v1/recipes/#{recipe.client_id}", params: params, headers: session_headers
+        end
+
+        include_examples 'content type', :json
+        include_examples 'http status', :ok
+
+        it 'allows updating ingredients' do
           expect(Ingredient.first.as_json.slice('client_id', 'description', 'recipe_id')).to(
-            eq(
-              {
-                'client_id' => ing_client_id,
-                'description' => 'An ingredient',
-                'recipe_id' => subject.client_id,
-              },
-            ),
+            eq({ 'client_id' => ing_client_id,
+                 'description' => 'An ingredient',
+                 'recipe_id' => recipe.client_id, }),
           )
-          expect(Step.first.as_json.slice('client_id', 'description', 'recipe_id')).to(
-            eq(
-              {
-                'client_id' => step_1_client_id,
-                'description' => 'Step 1',
-                'recipe_id' => subject.client_id,
-              },
-            ),
+        end
+
+        it 'allows updating steps' do
+          expect(Step.all[0..1].map { |x| x.as_json.slice('client_id', 'description', 'recipe_id') }).to(
+            eq([
+                 {
+                   'client_id' => step_1_client_id,
+                   'description' => 'Step 1',
+                   'recipe_id' => recipe.client_id,
+                 },
+                 {
+                   'client_id' => step_2_client_id,
+                   'description' => 'Step 2',
+                   'recipe_id' => recipe.client_id,
+                 },
+               ]),
           )
-          expect(Step.second.as_json.slice('client_id', 'description', 'recipe_id')).to(
-            eq(
-              {
-                'client_id' => step_2_client_id,
-                'description' => 'Step 2',
-                'recipe_id' => subject.client_id,
-              },
-            ),
-          )
+        end
+
+        it 'allows updating categories' do
           expect(RecipeCategory.first.as_json.slice('category_id', 'recipe_id')).to(
             eq(
               {
                 'category_id' => cat.client_id,
-                'recipe_id' => subject.client_id,
+                'recipe_id' => recipe.client_id,
               },
             ),
           )
@@ -199,12 +245,15 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
   end
 
   describe '#destroy' do
-    subject { create(:recipe, :default) }
+    subject!(:recipe) { create(:recipe, :default) }
 
-    it 'forbids destroying a recipe' do
-      delete "/api/v1/recipes/#{subject.client_id}"
-      expect(response.content_type).to eq(json_content_type)
-      expect(response).to have_http_status(:forbidden)
+    describe 'response' do
+      before do
+        delete "/api/v1/recipes/#{recipe.client_id}"
+      end
+
+      include_examples 'content type', :json
+      include_examples 'http status', :forbidden
     end
 
     context 'when signed in' do
@@ -213,20 +262,30 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
       end
 
       def make_request
-        delete "/api/v1/recipes/#{subject.client_id}", headers: session_headers
+        delete "/api/v1/recipes/#{recipe.client_id}", headers: session_headers
       end
 
-      it 'allows destroying a recipe' do
-        make_request
-        expect(response.content_type).to be_nil
-        expect(response).to have_http_status(:no_content)
+      describe 'response' do
+        before do
+          make_request
+        end
+
+        include_examples 'content type', nil
+        include_examples 'http status', :no_content
       end
 
-      it 'reports errors when unable to delete recipe' do
-        allow_any_instance_of(Recipe).to receive(:destroy).and_return(false)
-        make_request
-        expect(response.content_type).to eq(json_content_type)
-        expect(response).to have_http_status(:unprocessable_entity)
+      it 'removes a recipe from the database' do
+        expect { make_request }.to change(Recipe, :count).by(-1)
+      end
+
+      context 'with error' do
+        before do
+          allow_any_instance_of(Recipe).to receive(:destroy).and_return(false)
+          make_request
+        end
+
+        include_examples 'content type', :json
+        include_examples 'http status', :unprocessable_entity
       end
     end
   end

@@ -14,8 +14,10 @@ module SessionHelper
     }
   end
 
-  def json_content_type
-    'application/json; charset=utf-8'
+  def content_type_map
+    {
+      json: 'application/json; charset=utf-8',
+    }
   end
 end
 

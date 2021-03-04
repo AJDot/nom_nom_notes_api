@@ -5,7 +5,7 @@ class CookTime
   attr_reader :interval, :hours, :minutes
 
   def initialize(interval)
-    interval = '00:00' if interval.nil? || interval.empty?
+    interval = '00:00' if interval.blank?
     # strip off seconds and leading zeros
     # turn into HH:MM format (hours may be > 99)
     hh_mm = /\A0*(\d*):0*(\d*)/

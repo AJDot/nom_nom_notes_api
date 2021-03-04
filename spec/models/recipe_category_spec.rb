@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_relative 'concerns/client_id_spec'
 
 RSpec.describe RecipeCategory, type: :model do
-  subject do
+  subject(:rec_cat) do
     described_class.new(
       recipe: create(:recipe, :default),
       category: create(:category, :default),
@@ -14,17 +13,17 @@ RSpec.describe RecipeCategory, type: :model do
   it_behaves_like 'client_id'
 
   it 'is valid with valid attributes' do
-    expect(subject).to be_valid
+    expect(rec_cat).to be_valid
   end
 
   it 'is not valid without a recipe' do
-    subject.recipe = nil
-    expect(subject).to_not be_valid
+    rec_cat.recipe = nil
+    expect(rec_cat).not_to be_valid
   end
 
   it 'is not valid without a category' do
-    subject.category = nil
-    expect(subject).to_not be_valid
+    rec_cat.category = nil
+    expect(rec_cat).not_to be_valid
   end
 
   describe '.to_params' do

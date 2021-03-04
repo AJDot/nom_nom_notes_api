@@ -17,34 +17,57 @@ RSpec.describe 'Signups', type: :request do
       }
     end
 
-    it 'allows user creation with valid params' do
-      expect do
-        post '/signup', params: signup_params
-      end.to(change { User.count }.by(1))
+    context 'with valid params' do
+      it 'creates a user' do
+        expect do
+          post '/signup', params: signup_params
+        end.to(change(User, :count).by(1))
+      end
 
-      expect(response).to have_http_status(:created)
-      expect(response.content_type).to eq(json_content_type)
+      describe 'response' do
+        before do
+          post '/signup', params: signup_params
+        end
+
+        include_examples 'content type', :json
+        include_examples 'http status', :created
+      end
     end
 
-    it 'does not allow signup without valid username' do
-      signup_params[:username] = nil
-      expect do
-        post '/signup', params: signup_params
-      end.to_not(change { User.count })
+    context 'without valid username' do
+      before do
+        signup_params[:username] = nil
+      end
 
-      expect(response).to have_http_status(:unprocessable_entity)
-      expect(response.content_type).to eq(json_content_type)
+      describe 'response' do
+        before do
+          post '/signup', params: signup_params
+        end
+
+        include_examples 'content type', :json
+        include_examples 'http status', :unprocessable_entity
+      end
+
+      it 'does not create a user' do
+        expect { post '/signup', params: signup_params }.not_to(change(User, :count))
+      end
     end
 
-    it 'does not allow signup when feature is disabled' do
-      Features::Service.new[:signup].disable
+    context 'when feature is disabled' do
+      before { Features::Service.new[:signup].disable }
 
-      expect do
-        post '/signup', params: signup_params
-      end.to_not(change { User.count })
+      describe 'response' do
+        before do
+          post '/signup', params: signup_params
+        end
 
-      expect(response).to have_http_status(:forbidden)
-      expect(response.content_type).to eq(json_content_type)
+        include_examples 'content type', :json
+        include_examples 'http status', :forbidden
+      end
+
+      it 'does not create a user' do
+        expect { post '/signup', params: signup_params }.not_to(change(User, :count))
+      end
     end
   end
 end

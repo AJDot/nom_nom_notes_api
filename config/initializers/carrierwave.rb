@@ -7,7 +7,7 @@ if Rails.env.test? # or Rails.env.development?
   # Fog.mock! if Figaro.env.FOG_MOCK == 'true'
   CarrierWave.configure do |config|
     config.storage = :file
-    config.root = "#{Rails.root}/tmp" # default is "#{Rails.root}/public"
+    config.root = Rails.root.join('/tmp') # default is "Rails.root.join('/public')"
   end
 else
   require 'carrierwave/storage/fog'
