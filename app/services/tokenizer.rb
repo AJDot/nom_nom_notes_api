@@ -2,7 +2,7 @@
 
 # Encode/decode payload with JWE
 class Tokenizer
-  SECRET_TOKEN = Rails.application.secrets.secret_tokenizer_base
+  SECRET_TOKEN = Rails.application.credentials.secret_tokenizer_base
 
   def self.encrypt(payload)
     payload = payload.to_json unless payload.is_a? String

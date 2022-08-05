@@ -16,8 +16,8 @@ else
     config.storage :fog
     config.fog_credentials = {
       provider: 'AWS',
-      aws_access_key_id: Figaro.env.AWS_ACCESS_KEY_ID,
-      aws_secret_access_key: Figaro.env.AWS_SECRET_ACCESS_KEY,
+      aws_access_key_id: Rails.application.credentials.aws_access_key_id,
+      aws_secret_access_key: Rails.application.credentials.aws_secret_access_key,
       region: Figaro.env.AWS_REGION,
     }
     config.fog_directory = Figaro.env.S3_BUCKET_NAME
