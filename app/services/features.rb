@@ -29,7 +29,7 @@ module Features
     end
 
     def add_report_item(key, error: nil)
-      _report.add(key, error: error)
+      _report.add(key, error:)
     end
 
     # @param key [:signup]
@@ -52,7 +52,7 @@ module Features
     end
 
     def add(key, error: nil)
-      features[key] = { error: error }
+      features[key] = { error: }
     end
   end
 
@@ -66,7 +66,7 @@ module Features
   # Error for feature being off
   class ForbiddenError < Error
     def initialize(action: 'perform action')
-      super(I18n.t('features.errors.forbidden.message', action: action))
+      super(I18n.t('features.errors.forbidden.message', action:))
     end
   end
 

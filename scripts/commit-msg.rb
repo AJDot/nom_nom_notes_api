@@ -4,8 +4,8 @@
 message_path = ARGV[0]
 message = File.read message_path
 
-COMMIT_REGEX = /^(revert: )?(feat|fix|docs|style|refactor|test|wip|chore)(\(.+\))?: .{1,50}/.freeze
-MERGE_REGEX = /^Merge branch/.freeze # For Tower
+COMMIT_REGEX = /^(revert: )?(feat|fix|docs|style|refactor|test|wip|chore)(\(.+\))?: .{1,50}/
+MERGE_REGEX = /^Merge branch/ # For Tower
 spec_path = './docs/commit-conventions.md'
 unless message.match(COMMIT_REGEX) || message.match(MERGE_REGEX)
   print <<~TEXT

@@ -4,6 +4,8 @@
 
 ```bash
 pg_ctl -D /usr/local/var/postgres start
+# OR
+brew services start postgresql
 ```
 
 ## Token Generation
