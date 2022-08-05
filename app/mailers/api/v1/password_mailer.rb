@@ -4,11 +4,13 @@ module Api
   module V1
     # Mail about passwords, forgotten, reset
     class PasswordMailer < ApplicationMailer
+      Recipient = Struct.new(:email, keyword_init: true)
+
       def forgot(email:, token:, origin_url:)
         @origin_url = origin_url
-        @recipient = OpenStruct.new(email: email)
+        @recipient = Recipient.new({ email: })
         @heading = 'Password Reset Requested'
-        @url = "#{origin_url}?#{{ token: token }.to_query}"
+        @url = "#{origin_url}?#{{ token: }.to_query}"
         mail to: @recipient.email, subject: @heading
       end
     end

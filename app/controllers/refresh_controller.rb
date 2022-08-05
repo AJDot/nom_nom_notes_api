@@ -9,7 +9,7 @@ class RefreshController < ApplicationController
   end
 
   def destroy
-    session = JWTSessions::Session.new(payload: payload)
+    session = JWTSessions::Session.new(payload:)
     session.flush_by_access_payload
     render json: :ok
   end

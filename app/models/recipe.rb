@@ -14,8 +14,8 @@ class Recipe < ApplicationRecord
   mount_uploader :image, RecipeImageUploader
 
   validates :name,
-            uniqueness: { message: 'must be unique' },
-            length: { minimum: 1, maximum: 100, message: 'must be between 1 and 100 characters' }
+            uniqueness: { message: I18n.t('models.recipes.errors.name.uniqueness') },
+            length: { minimum: 1, maximum: 100, message: I18n.t('models.recipes.errors.name.length') }
 
   def self.to_params
     RecordParams.new(

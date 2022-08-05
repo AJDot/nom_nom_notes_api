@@ -14,7 +14,7 @@ class SigninController < ApplicationController
   end
 
   def destroy
-    session = JWTSessions::Session.new(payload: payload)
+    session = JWTSessions::Session.new(payload:)
     session.flush_by_access_payload
     render status: :ok
   end

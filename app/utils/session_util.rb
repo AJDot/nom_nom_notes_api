@@ -6,7 +6,7 @@ class SessionUtil
 
   def build_session(payload)
     @session = JWTSessions::Session.new(
-      payload: payload,
+      payload:,
       refresh_by_access_allowed: true,
     )
   end
@@ -15,8 +15,8 @@ class SessionUtil
     @tokens = @session.login
   end
 
-  def refresh(&block)
-    @tokens = @session.refresh_by_access_payload(&block)
+  def refresh(&)
+    @tokens = @session.refresh_by_access_payload(&)
   end
 
   def set_cookie(response, tokens = @tokens)

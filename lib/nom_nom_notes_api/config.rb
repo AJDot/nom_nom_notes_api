@@ -9,7 +9,10 @@ module NomNomNotesApi
 
     def use_admin_auth(middleware)
       middleware.use NomNomNotesApi::AdminAuth do |username, password|
-        [username, password] == [ENV.fetch('ADMIN_USERNAME'), ENV.fetch('ADMIN_SECRET')]
+        [username, password] == [
+          Rails.application.credentials.admin_username,
+          Rails.application.credentials.admin_secret,
+        ]
       end
     end
   end

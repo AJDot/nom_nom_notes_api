@@ -22,8 +22,8 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
       create(:recipe, :default)
     end
 
-    let!(:ing) { create(:ingredient, :default, recipe: recipe) }
-    let!(:step) { create(:step, :default, recipe: recipe) }
+    let!(:ing) { create(:ingredient, :default, recipe:) }
+    let!(:step) { create(:step, :default, recipe:) }
     let!(:cat) { create(:category, :default, recipes: [recipe]) }
 
     context 'when not signed in' do
@@ -199,7 +199,7 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
         let(:step_2_client_id) { SecureRandom.uuid }
 
         before do
-          patch "/api/v1/recipes/#{recipe.client_id}", params: params, headers: session_headers
+          patch "/api/v1/recipes/#{recipe.client_id}", params:, headers: session_headers
         end
 
         include_examples 'content type', :json

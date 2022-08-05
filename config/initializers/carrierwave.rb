@@ -18,7 +18,7 @@ else
       provider: 'AWS',
       aws_access_key_id: Rails.application.credentials.aws_access_key_id,
       aws_secret_access_key: Rails.application.credentials.aws_secret_access_key,
-      region: Figaro.env.AWS_REGION,
+      region: Rails.application.credentials.AWS_REGION,
     }
     config.fog_directory = Figaro.env.S3_BUCKET_NAME
     config.fog_public = false

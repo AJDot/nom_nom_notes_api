@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Api::V1::PasswordMailer, type: :mailer do
   describe '#forgot' do
     let(:mail) do
-      described_class.forgot(email: 'philip.fry@planet-express.com', token: 'abcd', origin_url: 'localhost:3000')
+      described_class.forgot(email: 'philip.fry@planet-express.com', token: 'abcd', origin_url: 'localhost:3001')
     end
 
     it 'renders the subject' do
@@ -29,12 +29,12 @@ RSpec.describe Api::V1::PasswordMailer, type: :mailer do
     end
 
     it 'renders the change password link' do
-      expect(mail.body.encoded).to match('Follow this link to change your password: localhost:3000\?token=abcd')
+      expect(mail.body.encoded).to match('Follow this link to change your password: localhost:3001\?token=abcd')
     end
 
     it 'renders the footer' do
-      expect(mail.body.encoded).to match('If you did not make this request, '\
-        'ignore this email. Your password can only be changed through the link in this email.')
+      expect(mail.body.encoded).to match('If you did not make this request, ignore this email. ' \
+                                         'Your password can only be changed through the link in this email.')
     end
   end
 end

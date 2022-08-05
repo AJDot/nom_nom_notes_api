@@ -9,6 +9,7 @@ module Testing
           DatabaseCleaner.strategy = :truncation
           DatabaseCleaner.clean
           ActionMailer::Base.deliveries = []
+          Rails.application.load_seed
         end
       end
     end

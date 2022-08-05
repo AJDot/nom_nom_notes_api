@@ -34,3 +34,9 @@ en:
     errors:
       forbidden:
         message: 'Unable to %{action}. Action is forbidden.'
+  models:
+    recipes:
+      errors:
+        name:
+          length: must be between 1 and 100 characters
+          uniqueness: must be unique
