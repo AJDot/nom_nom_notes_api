@@ -317,6 +317,7 @@ GEM
     tzinfo-data (1.2022.1)
       tzinfo (>= 1.0.0)
     unicode-display_width (2.2.0)
+    wdm (0.1.1)
     webrick (1.7.0)
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
@@ -362,6 +363,7 @@ DEPENDENCIES
   spring
   spring-watcher-listen (~> 2.0.0)
   tzinfo-data
+  wdm (>= 0.1.0)
 
 RUBY VERSION
    ruby 3.1.2p20
