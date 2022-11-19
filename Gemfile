@@ -39,6 +39,8 @@ gem 'flipper-active_record'
 gem 'flipper-api'
 gem 'flipper-ui'
 gem 'net-smtp', require: false
+gem 'net-imap', require: false
+gem 'net-pop', require: false
 
 gem "aws-sdk-s3", require: false
 
