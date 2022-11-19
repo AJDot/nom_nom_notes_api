@@ -25,6 +25,7 @@ class SessionUtil
       value: tokens[:access],
       httponly: true,
       secure: Rails.env.production?,
+      same_site: Rails.env.production? ? 'None' : 'Lax',
     )
   end
 end
