@@ -10,7 +10,7 @@ require 'rack/cors'
 use Rack::Cors do
   # allow all origins in development
   allow do
-    origins Rails.env.test? ? 'localhost:5174' : 'localhost:5173'
+    origins(ENV['SPA_ORIGIN'] || (Rails.env.test? ? 'localhost:5174' : 'localhost:5173'))
     resource '*',
              headers: :any,
              credentials: true,
