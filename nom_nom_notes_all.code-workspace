@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"name": "nom_nom_notes_api",
+			"path": "."
+		},
+		{
+			"path": "..\\nom_nom_notes"
+		}
+	],
+	"settings": {
+		"vue3snippets.enable-compile-vue-file-on-did-save-code": false
+	}
+}
