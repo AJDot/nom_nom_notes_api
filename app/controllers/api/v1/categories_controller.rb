@@ -5,6 +5,7 @@ module Api
     # Controller for Category model
     class CategoriesController < ApplicationController
       before_action :authorize_access_request!, except: [:index]
+      before_action :build_category, only: [:create]
 
       def index
         @categories = Category
@@ -15,6 +16,26 @@ module Api
           @categories = @categories.all
         end
         render json: @categories, status: :ok
+      end
+
+      def create
+        if @recipe.save
+          render json: @recipe, status: :created
+        else
+          render json: { error: @recipe.errors.full_messages }, status: :unprocessable_entity
+        end
+      end
+
+      private
+
+      def build_category
+        @recipe = Category.new(category_params)
+      end
+
+      def category_params
+        params.require(:category).permit(
+          *Category.to_params,
+        )
       end
     end
   end
