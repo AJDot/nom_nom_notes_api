@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   concern :api_base do
     resource :current_user, controller: :current_user, only: %i[show]
     resources :recipes, only: %i[index show update create destroy]
-    resources :categories, only: [:index]
+    resources :categories, only: %i[index create]
 
     resource :password, controller: :passwords, only: [] do
       collection do

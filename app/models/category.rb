@@ -13,4 +13,12 @@ class Category < ApplicationRecord
                   using: {
                     tsearch: { prefix: true },
                   }
+
+  def self.to_params
+    RecordParams.new(
+      :id,
+      :client_id,
+      :name,
+    ).to_params
+  end
 end
