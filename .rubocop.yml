@@ -54,3 +54,10 @@ RSpec/NestedGroups:
   Enabled: false
 RSpec/ExampleLength:
   Enabled: false
+
+Rails/UnknownEnv:
+  Environments:
+    - development
+    - test
+    - staging
+    - production

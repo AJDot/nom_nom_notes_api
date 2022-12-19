@@ -31,7 +31,7 @@ test:
   username: alexhenegar
   password: Il2ep!!!
 
-production:
+production: &production
   adapter: postgresql
   encoding: unicode
   pool: 5
@@ -39,3 +39,10 @@ production:
   database: <%= ENV['DATABASE_NAME'] %>
   username: <%= ENV['DATABASE_USER'] %>
   password: <%= ENV['DATABASE_PASSWORD'] %>
+
+staging: 
+  <<: *production
+  host: <%= Rails.application.credentials.database_host %>
+  database: <%= Rails.application.credentials.database_name %>
+  username: <%= Rails.application.credentials.database_user %>
+  password: <%= Rails.application.credentials.database_password %>
