@@ -9,7 +9,7 @@ module Api
       before_action :set_dynamic_recipe, only: %i[show update destroy]
 
       def index
-        @recipes = Recipe.all
+        @dynamic_recipes = DynamicRecipe.all
         render json: @dynamic_recipes, status: :ok
       end
 
