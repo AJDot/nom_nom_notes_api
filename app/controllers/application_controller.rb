@@ -8,6 +8,8 @@ class ApplicationController < ActionController::API
 
   rescue_from JWTSessions::Errors::Unauthorized, with: :not_authorized
 
+  before_action :transform_params_if_multipart!
+
   attr_writer :current_user
 
   private
@@ -27,5 +29,11 @@ class ApplicationController < ActionController::API
         client_id: [],
       ],
     )
+  end
+
+  def transform_params_if_multipart!
+    return unless /^multipart\/form-data*/.match(request.headers['content-type'])
+
+    self.params = ActionController::Parameters.new(params.permit!.to_h.deep_transform_keys(&:underscore))
   end
 end

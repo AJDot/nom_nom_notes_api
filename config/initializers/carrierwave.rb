@@ -3,11 +3,11 @@
 require 'carrierwave'
 require 'carrierwave/orm/activerecord'
 
-if Rails.env.test? # or Rails.env.development?
-  # Fog.mock! if Rails.application.credentials.fog_mock == 'true'
+if Rails.env.test? || Rails.env.development?
+  Fog.mock! if Rails.application.credentials.fog_mock == 'true'
   CarrierWave.configure do |config|
     config.storage = :file
-    config.root = Rails.root.join('/tmp') # default is "Rails.root.join('/public')"
+    # config.root = Rails.root.join('/tmp') # default is "Rails.root.join('/public')"
   end
 else
   require 'carrierwave/storage/fog'

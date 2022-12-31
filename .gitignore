@@ -36,3 +36,6 @@
 /config/credentials/staging.key
 
 /config/application.yml
+
+# Ignore uploads in development and test
+/public/uploads/*
