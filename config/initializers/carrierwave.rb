@@ -3,7 +3,7 @@
 require 'carrierwave'
 require 'carrierwave/orm/activerecord'
 
-if Rails.env.test? || Rails.env.development?
+if Rails.env.test?# || Rails.env.development?
   Fog.mock! if Rails.application.credentials.fog_mock == 'true'
   CarrierWave.configure do |config|
     config.storage = :file

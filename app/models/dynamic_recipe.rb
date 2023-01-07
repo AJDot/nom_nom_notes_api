@@ -2,6 +2,8 @@
 
 # The dynamic recipe class, represents a dynamic recipe, of course
 class DynamicRecipe < ApplicationRecord
+  attribute :blocks, default: -> { [] }
+
   has_many :attachments, as: :attachable, class_name: 'FileUpload', primary_key: :client_id, dependent: :destroy
   accepts_nested_attributes_for :attachments, allow_destroy: true
 
