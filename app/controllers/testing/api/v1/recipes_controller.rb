@@ -5,6 +5,10 @@ module Testing
     module V1
       # Internal test api for affecting Recipes
       class RecipesController < ApplicationController
+        def index
+          render json: Recipe.all, status: :ok
+        end
+
         def create
           recipes_data = []
           recipes_data << params[:recipe].permit! if params[:recipe]

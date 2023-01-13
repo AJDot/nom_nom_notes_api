@@ -5,8 +5,8 @@ require 'rails_helper'
 RSpec.describe RecipeCategory, type: :model do
   subject(:rec_cat) do
     described_class.new(
-      recipe: create(:recipe, :default),
-      category: create(:category, :default),
+      recipe: create(:recipe),
+      category: create(:category),
     )
   end
 

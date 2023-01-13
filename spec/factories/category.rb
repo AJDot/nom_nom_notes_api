@@ -2,8 +2,6 @@
 
 FactoryBot.define do
   factory :category do
-    trait :default do
-      name { Faker::Food.unique.fruits }
-    end
+    name { Faker::Food.unique.fruits }
   end
 end

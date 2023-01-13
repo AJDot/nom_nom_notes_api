@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe 'Api::V1::Recipes', type: :request do
   describe '#index' do
     before do
-      create_list(:recipe, 2, :default)
+      create_list(:recipe, 2)
       get '/api/v1/recipes'
     end
 
@@ -19,12 +19,14 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
 
   describe '#show' do
     subject(:recipe) do
-      create(:recipe, :default)
+      create(:recipe)
     end
 
-    let!(:ing) { create(:ingredient, :default, recipe:) }
-    let!(:step) { create(:step, :default, recipe:) }
-    let!(:cat) { create(:category, :default, recipes: [recipe]) }
+    let(:user) { create(:user) }
+
+    let!(:ing) { create(:ingredient, recipe:) }
+    let!(:step) { create(:step, recipe:) }
+    let!(:cat) { create(:category, recipes: [recipe]) }
 
     context 'when not signed in' do
       before do
@@ -44,7 +46,7 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
 
     context 'when signed in' do
       before do
-        sign_in(create(:user, :default))
+        sign_in(user)
         get "/api/v1/recipes/#{recipe.client_id}", headers: session_headers
       end
 
@@ -55,8 +57,9 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
 
   describe '#create' do
     let(:recipe_params) do
-      { recipe: { name: 'My Recipe' } }
+      { recipe: { name: 'My Recipe', owner_id: user.client_id } }
     end
+    let(:user) { create(:user) }
 
     context 'when not signed in' do
       before do
@@ -64,12 +67,12 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
       end
 
       include_examples 'content type', :json
-      include_examples 'http status', :forbidden
+      include_examples 'http status', :unauthorized
     end
 
     context 'when signed in' do
       before do
-        sign_in(create(:user, :default))
+        sign_in(user)
       end
 
       context 'with valid data' do
@@ -106,26 +109,49 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
   end
 
   describe '#update' do
-    subject(:recipe) { create(:recipe, :default) }
+    subject(:recipe) { create(:recipe, owner: user) }
+
+    let(:user) { create(:user) }
 
     describe 'response' do
       before do
+        recipe.update(owner: user)
         patch "/api/v1/recipes/#{recipe.client_id}"
       end
 
       include_examples 'content type', :json
-      include_examples 'http status', :forbidden
+      include_examples 'http status', :unauthorized
     end
 
     context 'when signed in' do
       before do
-        sign_in(create(:user, :default))
+        sign_in(user)
       end
 
       def make_request
         patch "/api/v1/recipes/#{recipe.client_id}",
               params: { recipe: { name: 'Something else' } },
               headers: session_headers
+      end
+
+      context 'without owner' do
+        before do
+          recipe.update(owner: nil)
+          make_request
+        end
+
+        include_examples 'content type', :json
+        include_examples 'http status', :forbidden
+      end
+
+      context 'with a different owner' do
+        before do
+          recipe.update(owner: create(:user, email: 'another@email.edu', username: 'another'))
+          make_request
+        end
+
+        include_examples 'content type', :json
+        include_examples 'http status', :forbidden
       end
 
       describe 'response' do
@@ -147,7 +173,7 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
 
         before do
           # create recipe so updating subject will result in name unique error
-          create(:recipe, :default, name: 'Something else')
+          create(:recipe, name: 'Something else')
           make_request
         end
 
@@ -164,6 +190,7 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
           {
             recipe: {
               name: 'Something else',
+              owner_id: user.client_id,
               ingredients: [
                 {
                   client_id: ing_client_id,
@@ -193,7 +220,7 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
             },
           }
         end
-        let(:cat) { create(:category, :default) }
+        let(:cat) { create(:category) }
         let(:ing_client_id) { SecureRandom.uuid }
         let(:step_1_client_id) { SecureRandom.uuid }
         let(:step_2_client_id) { SecureRandom.uuid }
@@ -245,7 +272,9 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
   end
 
   describe '#destroy' do
-    subject!(:recipe) { create(:recipe, :default) }
+    subject!(:recipe) { create(:recipe, owner: user) }
+
+    let(:user) { create(:user) }
 
     describe 'response' do
       before do
@@ -253,12 +282,12 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
       end
 
       include_examples 'content type', :json
-      include_examples 'http status', :forbidden
+      include_examples 'http status', :unauthorized
     end
 
     context 'when signed in' do
       before do
-        sign_in(create(:user, :default))
+        sign_in(user)
       end
 
       def make_request

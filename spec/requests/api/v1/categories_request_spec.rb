@@ -5,10 +5,10 @@ require 'rails_helper'
 RSpec.describe 'Api::V1::Categories', type: :request do
   describe '#index' do
     before do
-      create(:category, :default, name: 'AAA')
-      create(:category, :default, name: 'BB')
-      create(:category, :default, name: 'BBB')
-      create(:category, :default, name: 'CCC')
+      create(:category, name: 'AAA')
+      create(:category, name: 'BB')
+      create(:category, name: 'BBB')
+      create(:category, name: 'CCC')
     end
 
     describe 'basic' do

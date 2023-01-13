@@ -24,7 +24,7 @@ RSpec.describe User, type: :model do
   end
 
   it 'is not valid without a unique email' do
-    create :user, :default, email: 'phil@fry.futurama'
+    create(:user, email: 'phil@fry.futurama')
     user.email = 'phil@fry.futurama'
     expect(user).not_to be_valid
   end
@@ -45,7 +45,7 @@ RSpec.describe User, type: :model do
   end
 
   it 'is not valid without a unique username' do
-    create :user, :default, username: 'orangejoe'
+    create(:user, username: 'orangejoe')
     user.username = 'orangejoe'
     expect(user).not_to be_valid
   end

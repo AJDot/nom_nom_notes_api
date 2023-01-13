@@ -10,6 +10,7 @@ class Recipe < ApplicationRecord
   accepts_nested_attributes_for :steps, allow_destroy: true
   has_many :ingredients, dependent: :destroy, primary_key: :client_id
   accepts_nested_attributes_for :ingredients, allow_destroy: true
+  belongs_to :owner, class_name: 'User', primary_key: :client_id, inverse_of: :recipes, optional: true
 
   mount_uploader :image, RecipeImageUploader
 
@@ -26,6 +27,7 @@ class Recipe < ApplicationRecord
       :cook_time,
       :note,
       :image,
+      :owner_id,
     ).to_params
   end
 end

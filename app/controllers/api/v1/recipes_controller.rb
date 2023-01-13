@@ -5,8 +5,9 @@ module Api
     # Controller to handle recipe actions
     class RecipesController < ApplicationController
       before_action :authorize_access_request!, except: %i[index show]
-      before_action :build_recipe, only: [:create]
+      before_action :build_recipe, only: %i[create]
       before_action :set_recipe, only: %i[show update destroy]
+      authorize_resource only: %i[update]
 
       def index
         @recipes = Recipe.all

@@ -6,7 +6,7 @@ RSpec.describe Step, type: :model do
   subject(:step) do
     described_class.new(
       description: 'A Step',
-      recipe: create(:recipe, :default),
+      recipe: create(:recipe),
     )
   end
 

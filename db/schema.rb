@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_12_29_000505) do
+ActiveRecord::Schema.define(version: 2023_01_10_000835) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -87,7 +87,9 @@ ActiveRecord::Schema.define(version: 2022_12_29_000505) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "image"
+    t.uuid "owner_id"
     t.index ["name"], name: "index_recipes_on_name", unique: true
+    t.index ["owner_id"], name: "index_recipes_on_owner_id"
   end
 
   create_table "steps", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -111,8 +113,10 @@ ActiveRecord::Schema.define(version: 2022_12_29_000505) do
     t.string "username"
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
+    t.index ["client_id"], name: "index_users_on_client_id", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "recipes", "users", column: "owner_id", primary_key: "client_id"
 end

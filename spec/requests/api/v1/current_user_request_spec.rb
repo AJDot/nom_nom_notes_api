@@ -10,11 +10,11 @@ RSpec.describe 'Api::V1::CurrentUser', type: :request do
       end
 
       include_examples 'content type', :json
-      include_examples 'http status', :forbidden
+      include_examples 'http status', :unauthorized
     end
 
     context 'when signed in' do
-      subject(:user) { create(:user, :default) }
+      subject(:user) { create(:user) }
 
       before do
         sign_in(user)
