@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_01_10_000835) do
+ActiveRecord::Schema.define(version: 2023_01_13_232959) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -29,7 +29,9 @@ ActiveRecord::Schema.define(version: 2023_01_10_000835) do
     t.jsonb "blocks", default: []
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.uuid "owner_id"
     t.index ["name"], name: "index_dynamic_recipes_on_name", unique: true
+    t.index ["owner_id"], name: "index_dynamic_recipes_on_owner_id"
   end
 
   create_table "file_uploads", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -118,5 +120,6 @@ ActiveRecord::Schema.define(version: 2023_01_10_000835) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "dynamic_recipes", "users", column: "owner_id", primary_key: "client_id"
   add_foreign_key "recipes", "users", column: "owner_id", primary_key: "client_id"
 end

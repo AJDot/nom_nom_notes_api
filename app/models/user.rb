@@ -7,6 +7,7 @@ class User < ApplicationRecord
   token_payload_keys :email
 
   has_many :recipes, inverse_of: :owner, primary_key: :client_id, foreign_key: :owner_id, dependent: :nullify
+  has_many :dynamic_recipes, inverse_of: :owner, primary_key: :client_id, foreign_key: :owner_id, dependent: :nullify
 
   validates :password, confirmation: true, unless: -> { password.blank? }
   validates :password_confirmation, presence: true, unless: -> { password.blank? }

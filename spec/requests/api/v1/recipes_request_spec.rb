@@ -294,6 +294,26 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
         delete "/api/v1/recipes/#{recipe.client_id}", headers: session_headers
       end
 
+      context 'without owner' do
+        before do
+          recipe.update(owner: nil)
+          make_request
+        end
+
+        include_examples 'content type', :json
+        include_examples 'http status', :forbidden
+      end
+
+      context 'with a different owner' do
+        before do
+          recipe.update(owner: create(:user, email: 'another@email.edu', username: 'another'))
+          make_request
+        end
+
+        include_examples 'content type', :json
+        include_examples 'http status', :forbidden
+      end
+
       describe 'response' do
         before do
           make_request

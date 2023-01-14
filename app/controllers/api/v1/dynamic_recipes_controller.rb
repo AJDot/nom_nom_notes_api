@@ -7,6 +7,7 @@ module Api
       before_action :authorize_access_request!, except: %i[index show]
       before_action :build_dynamic_recipe, only: [:create]
       before_action :set_dynamic_recipe, only: %i[show update destroy]
+      authorize_resource only: %i[update destroy]
 
       def index
         @dynamic_recipes = DynamicRecipe.all
