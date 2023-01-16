@@ -11,8 +11,8 @@ module Testing
 
         def create
           dynamic_recipes_data = []
-          dynamic_recipes_data << params[:dynamic_recipe].permit! if params[:dynamic_recipe]
-          dynamic_recipes_data += params[:dynamic_recipes].map(&:permit!) if params[:dynamic_recipes]
+          dynamic_recipes_data << params[:dynamic_recipe].permit! if params[:dynamic_recipe].present?
+          dynamic_recipes_data += params[:dynamic_recipes].map(&:permit!) if params[:dynamic_recipes].present?
           dynamic_recipes = DynamicRecipe.create(dynamic_recipes_data)
           render json: dynamic_recipes, status: dynamic_recipes.all?(&:valid?) ? :ok : :unprocessable_entity
         end

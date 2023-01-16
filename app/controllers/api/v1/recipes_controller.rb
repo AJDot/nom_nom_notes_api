@@ -11,11 +11,11 @@ module Api
 
       def index
         @recipes = Recipe.all
-        render json: @recipes, include: %w[steps ingredients categories recipe_categories], status: :ok
+        render json: @recipes, include: %w[steps ingredients tags taggings], status: :ok
       end
 
       def show
-        render json: @recipe, include: %w[steps ingredients categories recipe_categories]
+        render json: @recipe, include: %w[steps ingredients tags taggings]
       end
 
       def create
@@ -57,7 +57,7 @@ module Api
           *Recipe.to_params,
           steps: Step.to_params,
           ingredients: Ingredient.to_params,
-          recipe_categories: RecipeCategory.to_params,
+          taggings: Tagging.to_params,
         )
 
         Recipe.reflect_on_all_associations.each do |reflection|

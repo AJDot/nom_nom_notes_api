@@ -8,6 +8,7 @@ exclude:
 - test/**/*
 - vendor/**/*
 - ".bundle/**/*"
+- db/schema.rb
 require: []
 domains: []
 reporters:

@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
-# Recipe category class
-# A single Category may belong to many Recipes
-class Category < ApplicationRecord
+# A single Tag may belong to many Tagg
+class Tag < ApplicationRecord
   include PgSearch::Model
 
-  has_many :recipe_categories, primary_key: :client_id, dependent: :destroy
-  has_many :recipes, through: :recipe_categories, primary_key: :client_id
+  has_many :taggings, primary_key: :client_id, dependent: :destroy
+  has_many :recipes, through: :taggings, primary_key: :client_id, source: :taggable, source_type: 'Recipe'
 
   pg_search_scope :search_by_name,
                   against: :name,

@@ -26,7 +26,7 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
 
     let!(:ing) { create(:ingredient, recipe:) }
     let!(:step) { create(:step, recipe:) }
-    let!(:cat) { create(:category, recipes: [recipe]) }
+    let!(:tag) { create(:tag, recipes: [recipe]) }
 
     context 'when not signed in' do
       before do
@@ -37,10 +37,10 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
       include_examples 'http status', :ok
 
       it 'returns recipe data with related data' do
-        rec_cat = RecipeCategory.first
+        tagging = Tagging.first
         incs = response.parsed_body['included']
         client_ids = incs.map { |x| x['attributes']['clientId'] }
-        expect(client_ids).to include(ing.client_id, step.client_id, cat.client_id, rec_cat.client_id)
+        expect(client_ids).to include(ing.client_id, step.client_id, tag.client_id, tagging.client_id)
       end
     end
 
@@ -210,17 +210,18 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
                   recipe_id: recipe.client_id,
                 },
               ],
-              recipe_categories: [
+              taggings: [
                 {
                   client_id: SecureRandom.uuid,
                   recipe_id: recipe.client_id,
-                  category_id: cat.client_id,
+                  tag_id: tag.client_id,
+                  taggable_type: 'Recipe',
                 },
               ],
             },
           }
         end
-        let(:cat) { create(:category) }
+        let(:tag) { create(:tag) }
         let(:ing_client_id) { SecureRandom.uuid }
         let(:step_1_client_id) { SecureRandom.uuid }
         let(:step_2_client_id) { SecureRandom.uuid }
@@ -257,12 +258,13 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
           )
         end
 
-        it 'allows updating categories' do
-          expect(RecipeCategory.first.as_json.slice('category_id', 'recipe_id')).to(
+        it 'allows updating tags' do
+          expect(Tagging.first.as_json.slice('tag_id', 'taggable_id', 'taggable_type')).to(
             eq(
               {
-                'category_id' => cat.client_id,
-                'recipe_id' => recipe.client_id,
+                'tag_id' => tag.client_id,
+                'taggable_id' => recipe.client_id,
+                'taggable_type' => 'Recipe',
               },
             ),
           )

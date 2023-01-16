@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     resource :current_user, controller: :current_user, only: %i[show]
     resources :recipes, only: %i[index show update create destroy]
     resources :dynamic_recipes, only: %i[index show update create destroy]
-    resources :categories, only: %i[index create]
+    resources :tags, only: %i[index create]
     resources :file_uploads, only: %i[show create destroy]
     resource :ability, controller: :ability, only: %i[show]
 

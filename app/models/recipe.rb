@@ -3,9 +3,9 @@
 # The recipe class, represents a recipe, of course
 class Recipe < ApplicationRecord
   attribute :cook_time, :duration
-  has_many :recipe_categories, primary_key: :client_id, dependent: :destroy
-  accepts_nested_attributes_for :recipe_categories, allow_destroy: true
-  has_many :categories, through: :recipe_categories, primary_key: :client_id
+  has_many :taggings, as: :taggable, primary_key: :client_id, dependent: :destroy
+  accepts_nested_attributes_for :taggings, allow_destroy: true
+  has_many :tags, through: :taggings, primary_key: :client_id
   has_many :steps, dependent: :destroy, primary_key: :client_id
   accepts_nested_attributes_for :steps, allow_destroy: true
   has_many :ingredients, dependent: :destroy, primary_key: :client_id
