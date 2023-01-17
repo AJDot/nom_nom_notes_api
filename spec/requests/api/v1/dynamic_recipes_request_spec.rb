@@ -2,52 +2,53 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Api::V1::Recipes', type: :request do
+RSpec.describe 'Api::V1::DynamicRecipes', type: :request do
   describe '#index' do
     before do
-      create_list(:recipe, 2)
-      get '/api/v1/recipes'
+      create_list(:dynamic_recipe, 2)
+      get '/api/v1/dynamic_recipes'
     end
 
     include_examples 'content type', :json
     include_examples 'http status', :ok
 
-    it 'allows retrieving all recipes' do
+    it 'allows retrieving all dynamic recipes' do
       expect(response.parsed_body['data'].count).to eq(2)
     end
   end
 
   describe '#show' do
-    subject(:recipe) do
-      create(:recipe)
+    subject(:dynamic_recipe) do
+      create(:dynamic_recipe)
     end
 
     let(:user) { create(:user) }
-
-    let!(:ing) { create(:ingredient, recipe:) }
-    let!(:step) { create(:step, recipe:) }
-    let!(:tag) { create(:tag, recipes: [recipe]) }
+    let!(:tag) { create(:tag, dynamic_recipes: [dynamic_recipe]) }
 
     context 'when not signed in' do
       before do
-        get "/api/v1/recipes/#{recipe.client_id}"
+        get "/api/v1/dynamic_recipes/#{dynamic_recipe.client_id}"
       end
 
       include_examples 'content type', :json
       include_examples 'http status', :ok
 
+      it 'returns dynamic recipe data' do
+        expect(response.parsed_body['data']['id']).to eq(dynamic_recipe.id)
+      end
+
       it 'returns recipe data with related data' do
         tagging = Tagging.first
         incs = response.parsed_body['included']
         client_ids = incs.map { |x| x['attributes']['clientId'] }
-        expect(client_ids).to include(ing.client_id, step.client_id, tag.client_id, tagging.client_id)
+        expect(client_ids).to include(tag.client_id, tagging.client_id)
       end
     end
 
     context 'when signed in' do
       before do
         sign_in(user)
-        get "/api/v1/recipes/#{recipe.client_id}", headers: session_headers
+        get "/api/v1/dynamic_recipes/#{dynamic_recipe.client_id}", headers: session_headers
       end
 
       include_examples 'content type', :json
@@ -56,14 +57,14 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
   end
 
   describe '#create' do
-    let(:recipe_params) do
-      { recipe: { name: 'My Recipe', owner_id: user.client_id } }
+    let(:dynamic_recipe_params) do
+      { dynamic_recipe: { name: 'My Dynamic Recipe', owner_id: user.client_id } }
     end
     let(:user) { create(:user) }
 
     context 'when not signed in' do
       before do
-        post '/api/v1/recipes', params: recipe_params
+        post '/api/v1/dynamic_recipes', params: dynamic_recipe_params
       end
 
       include_examples 'content type', :json
@@ -76,15 +77,15 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
       end
 
       context 'with valid data' do
-        it 'creates a Recipe' do
+        it 'creates a DynamicRecipe' do
           expect do
-            post '/api/v1/recipes', params: recipe_params, headers: session_headers
-          end.to change(Recipe, :count).by(1)
+            post '/api/v1/dynamic_recipes', params: dynamic_recipe_params, headers: session_headers
+          end.to change(DynamicRecipe, :count).by(1)
         end
 
         describe 'response' do
           before do
-            post '/api/v1/recipes', params: recipe_params, headers: session_headers
+            post '/api/v1/dynamic_recipes', params: dynamic_recipe_params, headers: session_headers
           end
 
           include_examples 'content type', :json
@@ -94,8 +95,8 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
 
       context 'when error' do
         before do
-          recipe_params[:recipe][:name] = ''
-          post '/api/v1/recipes', params: recipe_params, headers: session_headers
+          dynamic_recipe_params[:dynamic_recipe][:name] = ''
+          post '/api/v1/dynamic_recipes', params: dynamic_recipe_params, headers: session_headers
         end
 
         include_examples 'content type', :json
@@ -109,14 +110,14 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
   end
 
   describe '#update' do
-    subject(:recipe) { create(:recipe, owner: user) }
+    subject(:dynamic_recipe) { create(:dynamic_recipe, owner: user) }
 
     let(:user) { create(:user) }
 
     describe 'response' do
       before do
-        recipe.update(owner: user)
-        patch "/api/v1/recipes/#{recipe.client_id}"
+        dynamic_recipe.update(owner: user)
+        patch "/api/v1/dynamic_recipes/#{dynamic_recipe.client_id}"
       end
 
       include_examples 'content type', :json
@@ -129,14 +130,14 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
       end
 
       def make_request
-        patch "/api/v1/recipes/#{recipe.client_id}",
-              params: { recipe: { name: 'Something else' } },
+        patch "/api/v1/dynamic_recipes/#{dynamic_recipe.client_id}",
+              params: { dynamic_recipe: { name: 'Something else' } },
               headers: session_headers
       end
 
       context 'without owner' do
         before do
-          recipe.update(owner: nil)
+          dynamic_recipe.update(owner: nil)
           make_request
         end
 
@@ -146,7 +147,7 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
 
       context 'with a different owner' do
         before do
-          recipe.update(owner: create(:user, email: 'another@email.edu', username: 'another'))
+          dynamic_recipe.update(owner: create(:user, email: 'another@email.edu', username: 'another'))
           make_request
         end
 
@@ -163,124 +164,77 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
         include_examples 'http status', :ok
       end
 
-      it 'can update the recipe name' do
+      it 'can update the dynamic recipe name' do
         make_request
-        expect(recipe.reload.name).to eq('Something else')
-      end
-
-      context 'with error' do
-        let!(:old_name) { recipe.name }
-
-        before do
-          # create recipe so updating subject will result in name unique error
-          create(:recipe, name: 'Something else')
-          make_request
-        end
-
-        include_examples 'content type', :json
-        include_examples 'http status', :unprocessable_entity
-
-        it 'does not update the recipe name' do
-          expect(recipe.reload.name).to eq(old_name)
-        end
+        expect(dynamic_recipe.reload.name).to eq('Something else')
       end
 
       context 'with relational data' do
         let(:params) do
           {
-            recipe: {
+            dynamic_recipe: {
               name: 'Something else',
               owner_id: user.client_id,
-              ingredients: [
-                {
-                  client_id: ing_client_id,
-                  description: 'An ingredient',
-                  recipe_id: recipe.client_id,
-                },
-              ],
-              steps: [
-                {
-                  client_id: step_1_client_id,
-                  description: 'Step 1',
-                  recipe_id: recipe.client_id,
-                },
-                {
-                  client_id: step_2_client_id,
-                  description: 'Step 2',
-                  recipe_id: recipe.client_id,
-                },
-              ],
               taggings: [
                 {
                   client_id: SecureRandom.uuid,
                   tag_id: tag.client_id,
-                  taggable_id: recipe.client_id,
-                  taggable_type: 'Recipe',
+                  taggable_id: dynamic_recipe.client_id,
+                  taggable_type: 'DynamicRecipe',
                 },
               ],
             },
           }
         end
         let(:tag) { create(:tag) }
-        let(:ing_client_id) { SecureRandom.uuid }
-        let(:step_1_client_id) { SecureRandom.uuid }
-        let(:step_2_client_id) { SecureRandom.uuid }
 
         before do
-          patch "/api/v1/recipes/#{recipe.client_id}", params:, headers: session_headers
+          patch "/api/v1/dynamic_recipes/#{dynamic_recipe.client_id}", params:, headers: session_headers
         end
 
         include_examples 'content type', :json
         include_examples 'http status', :ok
-
-        it 'allows updating ingredients' do
-          expect(Ingredient.first.as_json.slice('client_id', 'description', 'recipe_id')).to(
-            eq({ 'client_id' => ing_client_id,
-                 'description' => 'An ingredient',
-                 'recipe_id' => recipe.client_id, }),
-          )
-        end
-
-        it 'allows updating steps' do
-          expect(Step.all[0..1].map { |x| x.as_json.slice('client_id', 'description', 'recipe_id') }).to(
-            eq([
-                 {
-                   'client_id' => step_1_client_id,
-                   'description' => 'Step 1',
-                   'recipe_id' => recipe.client_id,
-                 },
-                 {
-                   'client_id' => step_2_client_id,
-                   'description' => 'Step 2',
-                   'recipe_id' => recipe.client_id,
-                 },
-               ]),
-          )
-        end
 
         it 'allows updating tags' do
           expect(Tagging.first.as_json.slice('tag_id', 'taggable_id', 'taggable_type')).to(
             eq(
               {
                 'tag_id' => tag.client_id,
-                'taggable_id' => recipe.client_id,
-                'taggable_type' => 'Recipe',
+                'taggable_id' => dynamic_recipe.client_id,
+                'taggable_type' => 'DynamicRecipe',
               },
             ),
           )
+        end
+      end
+
+      context 'with error' do
+        let!(:old_name) { dynamic_recipe.name }
+
+        before do
+          # create dynamic recipe so updating subject will result in name unique error
+          create(:dynamic_recipe, name: 'Something else')
+          make_request
+        end
+
+        include_examples 'content type', :json
+        include_examples 'http status', :unprocessable_entity
+
+        it 'does not update the dynamic recipe name' do
+          expect(dynamic_recipe.reload.name).to eq(old_name)
         end
       end
     end
   end
 
   describe '#destroy' do
-    subject!(:recipe) { create(:recipe, owner: user) }
+    subject!(:dynamic_recipe) { create(:dynamic_recipe, owner: user) }
 
     let(:user) { create(:user) }
 
     describe 'response' do
       before do
-        delete "/api/v1/recipes/#{recipe.client_id}"
+        delete "/api/v1/dynamic_recipes/#{dynamic_recipe.client_id}"
       end
 
       include_examples 'content type', :json
@@ -293,12 +247,12 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
       end
 
       def make_request
-        delete "/api/v1/recipes/#{recipe.client_id}", headers: session_headers
+        delete "/api/v1/dynamic_recipes/#{dynamic_recipe.client_id}", headers: session_headers
       end
 
       context 'without owner' do
         before do
-          recipe.update(owner: nil)
+          dynamic_recipe.update(owner: nil)
           make_request
         end
 
@@ -308,7 +262,7 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
 
       context 'with a different owner' do
         before do
-          recipe.update(owner: create(:user, email: 'another@email.edu', username: 'another'))
+          dynamic_recipe.update(owner: create(:user, email: 'another@email.edu', username: 'another'))
           make_request
         end
 
@@ -325,13 +279,13 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
         include_examples 'http status', :no_content
       end
 
-      it 'removes a recipe from the database' do
-        expect { make_request }.to change(Recipe, :count).by(-1)
+      it 'removes a dynamic recipe from the database' do
+        expect { make_request }.to change(DynamicRecipe, :count).by(-1)
       end
 
       context 'with error' do
         before do
-          allow_any_instance_of(Recipe).to receive(:destroy).and_return(false)
+          allow_any_instance_of(DynamicRecipe).to receive(:destroy).and_return(false)
           make_request
         end
 

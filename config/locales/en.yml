@@ -40,3 +40,8 @@ en:
         name:
           length: must be between 1 and 100 characters
           uniqueness: must be unique
+    dynamic_recipes:
+      errors:
+        name:
+          length: must be between 1 and 100 characters
+          uniqueness: must be unique

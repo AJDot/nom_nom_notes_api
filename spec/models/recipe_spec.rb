@@ -72,6 +72,7 @@ RSpec.describe Recipe, type: :model do
             cook_time
             note
             image
+            owner_id
           ],
         ),
       )

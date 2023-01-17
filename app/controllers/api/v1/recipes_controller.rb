@@ -5,16 +5,17 @@ module Api
     # Controller to handle recipe actions
     class RecipesController < ApplicationController
       before_action :authorize_access_request!, except: %i[index show]
-      before_action :build_recipe, only: [:create]
+      before_action :build_recipe, only: %i[create]
       before_action :set_recipe, only: %i[show update destroy]
+      authorize_resource only: %i[update destroy]
 
       def index
         @recipes = Recipe.all
-        render json: @recipes, include: %w[steps ingredients categories recipe_categories], status: :ok
+        render json: @recipes, include: %w[steps ingredients tags taggings], status: :ok
       end
 
       def show
-        render json: @recipe, include: %w[steps ingredients categories recipe_categories]
+        render json: @recipe, include: %w[steps ingredients tags taggings]
       end
 
       def create
@@ -56,7 +57,7 @@ module Api
           *Recipe.to_params,
           steps: Step.to_params,
           ingredients: Ingredient.to_params,
-          recipe_categories: RecipeCategory.to_params,
+          taggings: Tagging.to_params,
         )
 
         Recipe.reflect_on_all_associations.each do |reflection|

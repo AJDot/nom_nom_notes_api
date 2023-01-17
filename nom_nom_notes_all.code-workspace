@@ -5,7 +5,7 @@
 			"path": "."
 		},
 		{
-			"path": "..\\nom_nom_notes"
+			"path": "../nom_nom_notes"
 		}
 	],
 	"settings": {

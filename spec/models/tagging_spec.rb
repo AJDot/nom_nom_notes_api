@@ -2,28 +2,28 @@
 
 require 'rails_helper'
 
-RSpec.describe RecipeCategory, type: :model do
-  subject(:rec_cat) do
+RSpec.describe Tagging, type: :model do
+  subject(:tagging) do
     described_class.new(
-      recipe: create(:recipe, :default),
-      category: create(:category, :default),
+      taggable: create(:recipe),
+      tag: create(:tag),
     )
   end
 
   it_behaves_like 'client_id'
 
   it 'is valid with valid attributes' do
-    expect(rec_cat).to be_valid
+    expect(tagging).to be_valid
   end
 
-  it 'is not valid without a recipe' do
-    rec_cat.recipe = nil
-    expect(rec_cat).not_to be_valid
+  it 'is not valid without a taggable' do
+    tagging.taggable = nil
+    expect(tagging).not_to be_valid
   end
 
-  it 'is not valid without a category' do
-    rec_cat.category = nil
-    expect(rec_cat).not_to be_valid
+  it 'is not valid without a tag' do
+    tagging.tag = nil
+    expect(tagging).not_to be_valid
   end
 
   describe '.to_params' do
@@ -34,8 +34,9 @@ RSpec.describe RecipeCategory, type: :model do
             id
             client_id
             _destroy
-            recipe_id
-            category_id
+            tag_id
+            taggable_id
+            taggable_type
           ],
         ),
       )

@@ -29,7 +29,7 @@ RSpec.describe 'Api::V1::Passwords', type: :request do
     end
 
     context 'when email matches an existing user' do
-      let(:user) { create(:user, :default) }
+      let(:user) { create(:user) }
 
       before { put '/api/v1/password/forgot', params: { email: user.email } }
 
@@ -50,7 +50,7 @@ RSpec.describe 'Api::V1::Passwords', type: :request do
   end
 
   describe '#change' do
-    let(:user) { create(:user, :default) }
+    let(:user) { create(:user) }
     let(:new_password) { 'fa0s98hi2nj3k4' }
     let(:params) do
       {

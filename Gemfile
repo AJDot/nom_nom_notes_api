@@ -44,6 +44,8 @@ gem 'net-pop', require: false
 
 gem "aws-sdk-s3", require: false
 
+gem 'cancancan'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'awesome_print'
@@ -58,6 +60,9 @@ group :development do
   gem 'factory_bot_rails'
   gem 'faker'
   gem 'listen', '~> 3.2'
+  gem 'solargraph'
+  gem 'solargraph-rails'
+
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'solargraph'
   gem 'spring'

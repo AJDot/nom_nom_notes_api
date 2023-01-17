@@ -11,8 +11,9 @@ if Rails.env.test?
         end
 
         resources :users, only: %i[create update]
-        resources :recipes, only: [:create]
-        resources :categories, only: [:create]
+        resources :recipes, only: %i[index create]
+        resources :dynamic_recipes, only: %i[index create]
+        resources :tags, only: [:create]
         resources :features, only: %i[create destroy]
         resource :password, controller: :passwords do
           collection do
