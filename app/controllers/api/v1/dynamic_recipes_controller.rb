@@ -11,11 +11,11 @@ module Api
 
       def index
         @dynamic_recipes = DynamicRecipe.all
-        render json: @dynamic_recipes, include: %w[attachments], status: :ok
+        render json: @dynamic_recipes, include: %w[attachments tags taggings], status: :ok
       end
 
       def show
-        render json: @dynamic_recipe, include: %w[attachments]
+        render json: @dynamic_recipe, include: %w[attachments tags taggings]
       end
 
       def create
@@ -28,7 +28,7 @@ module Api
 
       def update
         if @dynamic_recipe.update(dynamic_recipe_params)
-          render json: @dynamic_recipe, status: :ok
+          render json: @dynamic_recipe, include: %w[attachments tags taggings], status: :ok
         else
           render json: { error: @dynamic_recipe.errors.full_messages }, status: :unprocessable_entity
         end
@@ -56,6 +56,7 @@ module Api
         p = params.require(:dynamic_recipe).permit(
           *DynamicRecipe.to_params,
           attachments: FileUpload.to_params,
+          taggings: Tagging.to_params,
         )
 
         DynamicRecipe.reflect_on_all_associations.each do |reflection|

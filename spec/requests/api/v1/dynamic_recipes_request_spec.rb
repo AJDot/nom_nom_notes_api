@@ -23,6 +23,7 @@ RSpec.describe 'Api::V1::DynamicRecipes', type: :request do
     end
 
     let(:user) { create(:user) }
+    let!(:tag) { create(:tag, dynamic_recipes: [dynamic_recipe]) }
 
     context 'when not signed in' do
       before do
@@ -34,6 +35,13 @@ RSpec.describe 'Api::V1::DynamicRecipes', type: :request do
 
       it 'returns dynamic recipe data' do
         expect(response.parsed_body['data']['id']).to eq(dynamic_recipe.id)
+      end
+
+      it 'returns recipe data with related data' do
+        tagging = Tagging.first
+        incs = response.parsed_body['included']
+        client_ids = incs.map { |x| x['attributes']['clientId'] }
+        expect(client_ids).to include(tag.client_id, tagging.client_id)
       end
     end
 
@@ -159,6 +167,45 @@ RSpec.describe 'Api::V1::DynamicRecipes', type: :request do
       it 'can update the dynamic recipe name' do
         make_request
         expect(dynamic_recipe.reload.name).to eq('Something else')
+      end
+
+      context 'with relational data' do
+        let(:params) do
+          {
+            dynamic_recipe: {
+              name: 'Something else',
+              owner_id: user.client_id,
+              taggings: [
+                {
+                  client_id: SecureRandom.uuid,
+                  tag_id: tag.client_id,
+                  taggable_id: dynamic_recipe.client_id,
+                  taggable_type: 'DynamicRecipe',
+                },
+              ],
+            },
+          }
+        end
+        let(:tag) { create(:tag) }
+
+        before do
+          patch "/api/v1/dynamic_recipes/#{dynamic_recipe.client_id}", params:, headers: session_headers
+        end
+
+        include_examples 'content type', :json
+        include_examples 'http status', :ok
+
+        it 'allows updating tags' do
+          expect(Tagging.first.as_json.slice('tag_id', 'taggable_id', 'taggable_type')).to(
+            eq(
+              {
+                'tag_id' => tag.client_id,
+                'taggable_id' => dynamic_recipe.client_id,
+                'taggable_type' => 'DynamicRecipe',
+              },
+            ),
+          )
+        end
       end
 
       context 'with error' do

@@ -213,8 +213,8 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
               taggings: [
                 {
                   client_id: SecureRandom.uuid,
-                  recipe_id: recipe.client_id,
                   tag_id: tag.client_id,
+                  taggable_id: recipe.client_id,
                   taggable_type: 'Recipe',
                 },
               ],
