@@ -6,6 +6,8 @@ class Tag < ApplicationRecord
 
   has_many :taggings, primary_key: :client_id, dependent: :destroy
   has_many :recipes, through: :taggings, primary_key: :client_id, source: :taggable, source_type: 'Recipe'
+  has_many :dynamic_recipes, through: :taggings, primary_key: :client_id, source: :taggable,
+                             source_type: 'DynamicRecipe'
 
   pg_search_scope :search_by_name,
                   against: :name,

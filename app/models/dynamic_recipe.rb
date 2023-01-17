@@ -7,6 +7,9 @@ class DynamicRecipe < ApplicationRecord
   has_many :attachments, as: :attachable, class_name: 'FileUpload', primary_key: :client_id, dependent: :destroy
   accepts_nested_attributes_for :attachments, allow_destroy: true
   belongs_to :owner, class_name: 'User', primary_key: :client_id, inverse_of: :recipes, optional: true
+  has_many :taggings, as: :taggable, primary_key: :client_id, dependent: :destroy
+  accepts_nested_attributes_for :taggings, allow_destroy: true
+  has_many :tags, through: :taggings, primary_key: :client_id
 
   validates :name,
             uniqueness: { message: I18n.t('models.dynamic_recipes.errors.name.uniqueness') },
