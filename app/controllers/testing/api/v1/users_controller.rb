@@ -7,8 +7,8 @@ module Testing
       class UsersController < ApplicationController
         def create
           users = []
-          users += create_users_from_params(params[:user])
-          users += create_users_from_params(params[:users])
+          users += create_users_from_params(params[:user]) if params[:user].present?
+          users += create_users_from_params(params[:users]) if params[:users].present?
           render json: users, status: users.all?(&:valid?) ? :ok : :unprocessable_entity
         end
 

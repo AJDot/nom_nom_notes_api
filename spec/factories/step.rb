@@ -2,8 +2,6 @@
 
 FactoryBot.define do
   factory :step do
-    trait :default do
-      description { Faker::Food.description }
-    end
+    description { Faker::Food.description }
   end
 end

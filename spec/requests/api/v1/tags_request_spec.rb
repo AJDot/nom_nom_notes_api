@@ -2,54 +2,54 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Api::V1::Categories', type: :request do
+RSpec.describe 'Api::V1::Tags', type: :request do
   describe '#index' do
     before do
-      create(:category, :default, name: 'AAA')
-      create(:category, :default, name: 'BB')
-      create(:category, :default, name: 'BBB')
-      create(:category, :default, name: 'CCC')
+      create(:tag, name: 'AAA')
+      create(:tag, name: 'BB')
+      create(:tag, name: 'BBB')
+      create(:tag, name: 'CCC')
     end
 
     describe 'basic' do
       before do
-        get '/api/v1/categories'
+        get '/api/v1/tags'
       end
 
       include_examples 'content type', :json
       include_examples 'http status', :ok
 
-      it 'allows retrieving all categories' do
+      it 'allows retrieving all tags' do
         expect(response.parsed_body['data'].count).to eq(4)
       end
     end
 
     context 'with query' do
-      context 'with no categories selected' do
+      context 'with no tags selected' do
         before do
-          get '/api/v1/categories', params: { query: { term: 'BBB' } }
+          get '/api/v1/tags', params: { query: { term: 'BBB' } }
         end
 
         include_examples 'content type', :json
         include_examples 'http status', :ok
 
-        it 'returns the amount of categories that match name' do
+        it 'returns the amount of tags that match name' do
           expect(response.parsed_body['data'].count).to eq(1)
         end
 
-        it 'returns the categories that match name' do
+        it 'returns the tags that match name' do
           expect(response.parsed_body['data'].first['attributes']).to include({ 'name' => 'BBB' })
         end
       end
 
-      context 'when excluding certain categories' do
+      context 'when excluding certain tags' do
         before do
-          get '/api/v1/categories',
+          get '/api/v1/tags',
               params: {
                 query: {
                   term: 'B',
                   not: {
-                    client_id: [Category.find_by(name: 'BB').client_id],
+                    client_id: [Tag.find_by(name: 'BB').client_id],
                   },
                 },
               }
@@ -58,11 +58,11 @@ RSpec.describe 'Api::V1::Categories', type: :request do
         include_examples 'content type', :json
         include_examples 'http status', :ok
 
-        it 'returns the amount of categories that match name' do
+        it 'returns the amount of tags that match name' do
           expect(response.parsed_body['data'].count).to eq(1)
         end
 
-        it 'returns the categories that match name' do
+        it 'returns the tags that match name' do
           expect(response.parsed_body['data'].first['attributes']).to include({ 'name' => 'BBB' })
         end
       end

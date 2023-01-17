@@ -6,7 +6,7 @@ RSpec.describe Ingredient, type: :model do
   subject(:ingredient) do
     described_class.new(
       description: 'An Ingredient',
-      recipe: create(:recipe, :default),
+      recipe: create(:recipe),
     )
   end
 
