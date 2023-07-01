@@ -8,6 +8,7 @@ class User < ApplicationRecord
 
   has_many :recipes, inverse_of: :owner, primary_key: :client_id, foreign_key: :owner_id, dependent: :nullify
   has_many :dynamic_recipes, inverse_of: :owner, primary_key: :client_id, foreign_key: :owner_id, dependent: :nullify
+  has_many :shopping_lists, inverse_of: :owner, primary_key: :client_id, foreign_key: :owner_id, dependent: :destroy
 
   validates :password, confirmation: true, unless: -> { password.blank? }
   validates :password_confirmation, presence: true, unless: -> { password.blank? }

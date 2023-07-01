@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     resources :tags, only: %i[index create]
     resources :file_uploads, only: %i[show create destroy]
     resource :ability, controller: :ability, only: %i[show]
+    resources :shopping_lists, only: %i[index update create]
 
     resource :password, controller: :passwords, only: [] do
       collection do

@@ -6,8 +6,11 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    can %i[update destroy], Recipe, { owner_id: user&.client_id }
-    can %i[update destroy], DynamicRecipe, { owner_id: user&.client_id }
+    if user
+      can %i[update destroy], Recipe, { owner_id: user.client_id }
+      can %i[update destroy], DynamicRecipe, { owner_id: user.client_id }
+      can %i[index update], ShoppingList, { owner_id: user.client_id }
+    end
   end
 
   def as_json(_opts)

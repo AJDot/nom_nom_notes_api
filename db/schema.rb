@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_01_14_210343) do
+ActiveRecord::Schema.define(version: 2023_06_26_230248) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
@@ -77,6 +78,15 @@ ActiveRecord::Schema.define(version: 2023_01_14_210343) do
     t.index ["owner_id"], name: "index_recipes_on_owner_id"
   end
 
+  create_table "shopping_lists", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "client_id"
+    t.jsonb "items", default: []
+    t.uuid "owner_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["owner_id"], name: "index_shopping_lists_on_owner_id"
+  end
+
   create_table "steps", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "recipe_id", null: false
     t.uuid "client_id"
@@ -124,4 +134,5 @@ ActiveRecord::Schema.define(version: 2023_01_14_210343) do
 
   add_foreign_key "dynamic_recipes", "users", column: "owner_id", primary_key: "client_id"
   add_foreign_key "recipes", "users", column: "owner_id", primary_key: "client_id"
+  add_foreign_key "shopping_lists", "users", column: "owner_id", primary_key: "client_id"
 end
