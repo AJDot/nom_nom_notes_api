@@ -14,7 +14,8 @@ class ShoppingList < ApplicationRecord
       items: %i[
         id
         reference_id
-        amount
+        quantity
+        name
         description
       ]
     ).to_params
