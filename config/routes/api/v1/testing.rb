@@ -13,6 +13,7 @@ if Rails.env.test?
         resources :users, only: %i[create update]
         resources :recipes, only: %i[index create]
         resources :dynamic_recipes, only: %i[index create]
+        resources :shopping_lists, only: %i[create]
         resources :tags, only: [:create]
         resources :features, only: %i[create destroy]
         resource :password, controller: :passwords do

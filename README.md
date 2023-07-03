@@ -20,3 +20,12 @@ SecureRandom.base64(10)
 ```bash
 RAILS_ENV=test rails db:drop && RAILS_ENV=test rails db:create && RAILS_ENV=test rails db:migrate;
 ```
+
+$env:EDITOR='vim'
+rails credentials:edit --environment development
+
+sudo service redis-server start
+
+$env:PGPASSWORD='Il2ep!!!'
+$env:PGUSER='postgres'
+heroku pg:pull postgresql-polished-21259 heroku1 --app nom-nom-notes-api

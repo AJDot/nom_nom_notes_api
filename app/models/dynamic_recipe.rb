@@ -30,6 +30,8 @@ class DynamicRecipe < ApplicationRecord
             text
             block_id
             attachment_id
+            quantity
+            name
           ],
         },
       ],
