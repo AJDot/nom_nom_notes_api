@@ -13,7 +13,6 @@ class ShoppingList < ApplicationRecord
       :owner_id,
       items: %i[
         id
-        reference_id
         quantity
         name
         description
