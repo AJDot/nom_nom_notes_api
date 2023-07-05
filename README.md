@@ -29,3 +29,13 @@ sudo service redis-server start
 $env:PGPASSWORD='Il2ep!!!'
 $env:PGUSER='postgres'
 heroku pg:pull postgresql-polished-21259 heroku1 --app nom-nom-notes-api
+
+###### Development for LAN (mobile access)
+$env:RAILS_ENV='development'
+rails s -b 0.0.0.0 -e development
+npm run dev:host
+
+###### Test
+$env:RAILS_ENV = 'test'
+rails s -p 3001
+npm run test
