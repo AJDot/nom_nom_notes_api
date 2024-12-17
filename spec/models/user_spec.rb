@@ -7,7 +7,6 @@ RSpec.describe User, type: :model do
     described_class.new(
       email: 'philip.fry@planet-express.com',
       password: 'ah123456',
-      password_confirmation: 'ah123456',
       username: 'orangejoe',
     )
   end
@@ -31,11 +30,6 @@ RSpec.describe User, type: :model do
 
   it 'is not valid without a password' do
     user.password = nil
-    expect(user).not_to be_valid
-  end
-
-  it 'is not valid without a password confirmation' do
-    user.password_confirmation = nil
     expect(user).not_to be_valid
   end
 

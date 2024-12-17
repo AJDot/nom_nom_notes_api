@@ -77,6 +77,8 @@ RSpec.describe DynamicRecipe, type: :model do
                    text
                    block_id
                    attachment_id
+                   quantity
+                   name
                  ],
                },
              ] },

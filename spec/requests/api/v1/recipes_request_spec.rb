@@ -321,8 +321,8 @@ RSpec.describe 'Api::V1::Recipes', type: :request do
           make_request
         end
 
-        include_examples 'content type', nil
-        include_examples 'http status', :no_content
+        include_examples 'content type', :json
+        include_examples 'http status', :ok
       end
 
       it 'removes a recipe from the database' do

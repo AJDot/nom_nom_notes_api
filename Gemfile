@@ -12,12 +12,7 @@ gem 'pg'
 # Use Puma as the app server
 gem 'puma', '~> 4.1'
 # Use Redis adapter to run Action Cable in production
-gem 'redis', '~> 4.0'
-
-gem 'jwt_sessions', '~> 2.3'
-# Use Active Model has_secure_password
-gem 'bcrypt', '~> 3.1.7'
-gem 'jwe'
+# gem 'redis', '~> 4.0'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
@@ -79,4 +74,6 @@ end
 gem 'tzinfo-data'
 
 # for Flipper on windows
-gem 'wdm', '>= 0.1.0' if Gem.win_platform?
+gem 'wdm', '>= 0.1.0', platforms: %i[mingw mswin x64_mingw jruby]
+
+gem "rodauth-rails", "~> 1.15"

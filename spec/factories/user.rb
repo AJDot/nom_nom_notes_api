@@ -4,7 +4,7 @@ FactoryBot.define do
   factory :user do
     email { 'philip.fry@planet-express.com' }
     password { 'ah123456' }
-    password_confirmation { password }
     username { 'orangejoe' }
+    status { 'verified' }
   end
 end

@@ -18,7 +18,7 @@ RSpec.describe 'Api::V1::CurrentUser', type: :request do
 
       before do
         sign_in(user)
-        get '/api/v1/current_user', headers: session_headers
+        get '/api/v1/current_user', headers: api_headers
       end
 
       include_examples 'content type', :json

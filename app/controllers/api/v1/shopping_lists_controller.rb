@@ -4,7 +4,7 @@ module Api
   module V1
     # Controller to handle shopping list actions
     class ShoppingListsController < ApplicationController
-      before_action :authorize_access_request!
+      before_action :authenticate!
       before_action :build_shopping_list, only: [:create]
       before_action :set_shopping_list, only: %i[show update]
       authorize_resource only: %i[update]

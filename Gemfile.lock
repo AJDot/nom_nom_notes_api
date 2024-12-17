@@ -67,6 +67,9 @@ GEM
       zeitwerk (~> 2.3)
     addressable (2.8.1)
       public_suffix (>= 2.0.2, < 6.0)
+    after_commit_everywhere (1.4.0)
+      activerecord (>= 4.2)
+      activesupport
     ast (2.4.2)
     awesome_print (1.9.2)
     aws-eventstream (1.2.0)
@@ -88,6 +91,7 @@ GEM
     backport (1.2.0)
     bcrypt (3.1.18)
     benchmark (0.2.1)
+    bigdecimal (3.1.8)
     bootsnap (1.14.0)
       msgpack (~> 1.2)
     builder (3.2.4)
@@ -122,6 +126,7 @@ GEM
       railties (>= 5.0.0)
     faker (3.0.0)
       i18n (>= 1.8.11, < 2)
+    ffi (1.15.5)
     ffi (1.15.5-x64-mingw-ucrt)
     figaro (1.2.0)
       thor (>= 0.14.0, < 2)
@@ -165,10 +170,6 @@ GEM
     jmespath (1.6.1)
     json (2.6.3)
     jsonapi-renderer (0.2.2)
-    jwe (0.4.0)
-    jwt (2.5.0)
-    jwt_sessions (2.7.4)
-      jwt (~> 2.5, < 3)
     kramdown (2.4.0)
       rexml
     kramdown-parser-gfm (1.1.0)
@@ -202,10 +203,13 @@ GEM
     nio4r (2.5.8)
     nokogiri (1.15.2-x64-mingw-ucrt)
       racc (~> 1.4)
+    nokogiri (1.15.2-x86_64-linux)
+      racc (~> 1.4)
     parallel (1.23.0)
     parser (3.2.2.3)
       ast (~> 2.4.1)
       racc
+    pg (1.5.3)
     pg (1.5.3-x64-mingw-ucrt)
     pg_search (2.3.6)
       activerecord (>= 5.2)
@@ -253,11 +257,25 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     rbs (2.8.4)
-    redis (4.8.0)
     regexp_parser (2.8.1)
     reverse_markdown (2.1.1)
       nokogiri
     rexml (3.2.5)
+    roda (3.86.0)
+      rack
+    rodauth (2.37.0)
+      roda (>= 2.6.0)
+      sequel (>= 4)
+    rodauth-model (0.3.0)
+      rodauth (~> 2.28)
+    rodauth-rails (1.15.2)
+      bcrypt
+      railties (>= 5.0, < 8.1)
+      roda (~> 3.76)
+      rodauth (~> 2.36)
+      rodauth-model (~> 0.2)
+      sequel-activerecord_connection (~> 1.1)
+      tilt
     rspec-core (3.12.0)
       rspec-support (~> 3.12.0)
     rspec-expectations (3.12.0)
@@ -299,6 +317,12 @@ GEM
     sanitize (6.0.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
+    sequel (5.87.0)
+      bigdecimal
+    sequel-activerecord_connection (1.5.1)
+      activerecord (>= 5.0, < 8.1)
+      after_commit_everywhere (~> 1.1)
+      sequel (~> 5.38)
     solargraph (0.49.0)
       backport (~> 1.2)
       benchmark
@@ -347,12 +371,12 @@ GEM
 
 PLATFORMS
   x64-mingw-ucrt
+  x86_64-linux
 
 DEPENDENCIES
   active_model_serializers (~> 0.10.0)
   awesome_print
   aws-sdk-s3
-  bcrypt (~> 3.1.7)
   bootsnap (>= 1.4.2)
   byebug
   cancancan
@@ -365,8 +389,6 @@ DEPENDENCIES
   flipper-api
   flipper-ui
   fog-aws
-  jwe
-  jwt_sessions (~> 2.3)
   listen (~> 3.2)
   net-imap
   net-pop
@@ -376,7 +398,7 @@ DEPENDENCIES
   puma (~> 4.1)
   rack-cors
   rails (~> 6.1.3, >= 6.1.3)
-  redis (~> 4.0)
+  rodauth-rails (~> 1.15)
   rspec-rails (~> 4.0.1)
   rubocop
   rubocop-rails
@@ -392,4 +414,4 @@ RUBY VERSION
    ruby 3.1.2p20
 
 BUNDLED WITH
-   2.3.26
+   2.3.25
