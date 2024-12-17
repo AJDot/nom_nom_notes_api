@@ -39,6 +39,9 @@ module NomNomNotesApi
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
-    config.middleware.use Rack::Session::Cookie, secret: Rails.application.credentials.session_cookie_secret
+    # config.middleware.use Rack::Session::Cookie, secret: Rails.application.credentials.session_cookie_secret
+    config.session_store :cookie_store, key: Rails.application.credentials.session_cookie_secret
+    config.middleware.use ActionDispatch::Cookies
+    config.middleware.use config.session_store, config.session_options
   end
 end

@@ -4,7 +4,7 @@ module Api
   module V1
     # Controller to handle recipe actions
     class RecipesController < ApplicationController
-      before_action :authorize_access_request!, except: %i[index show]
+      before_action :authenticate!, except: %i[index show]
       before_action :build_recipe, only: %i[create]
       before_action :set_recipe, only: %i[show update destroy]
       authorize_resource only: %i[update destroy]
@@ -36,7 +36,7 @@ module Api
 
       def destroy
         if @recipe.destroy
-          render json: @recipe, status: :no_content
+          render json: @recipe, status: :ok
         else
           render json: { error: @recipe.errors.full_messages }, status: :unprocessable_entity
         end

@@ -4,12 +4,12 @@ module Api
   module V1
     # Controller for Tag model
     class TagsController < ApplicationController
-      before_action :authorize_access_request!, except: [:index]
+      before_action :authenticate!, except: [:index]
       before_action :build_tag, only: [:create]
 
       def index
         @tags = Tag
-        if params[:query].present?
+        if query_params.present?
           @tags = @tags.where.not(query_params[:not]) if query_params[:not]
           @tags = @tags.search_by_name(query_params[:term])
         else

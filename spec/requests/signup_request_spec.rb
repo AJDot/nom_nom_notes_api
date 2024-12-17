@@ -20,17 +20,17 @@ RSpec.describe 'Signups', type: :request do
     context 'with valid params' do
       it 'creates a user' do
         expect do
-          post '/signup', params: signup_params
+          post '/auth/create-account', as: :json, params: signup_params
         end.to(change(User, :count).by(1))
       end
 
       describe 'response' do
         before do
-          post '/signup', params: signup_params
+          post '/auth/create-account', as: :json, params: signup_params
         end
 
         include_examples 'content type', :json
-        include_examples 'http status', :created
+        include_examples 'http status', :ok
       end
     end
 
@@ -41,7 +41,7 @@ RSpec.describe 'Signups', type: :request do
 
       describe 'response' do
         before do
-          post '/signup', params: signup_params
+          post '/auth/create-account', as: :json, params: signup_params
         end
 
         include_examples 'content type', :json
@@ -49,7 +49,7 @@ RSpec.describe 'Signups', type: :request do
       end
 
       it 'does not create a user' do
-        expect { post '/signup', params: signup_params }.not_to(change(User, :count))
+        expect { post '/auth/create-account', as: :json, params: signup_params }.not_to(change(User, :count))
       end
     end
 
@@ -58,7 +58,7 @@ RSpec.describe 'Signups', type: :request do
 
       describe 'response' do
         before do
-          post '/signup', params: signup_params
+          post '/auth/create-account', as: :json, params: signup_params
         end
 
         include_examples 'content type', :json
@@ -66,7 +66,7 @@ RSpec.describe 'Signups', type: :request do
       end
 
       it 'does not create a user' do
-        expect { post '/signup', params: signup_params }.not_to(change(User, :count))
+        expect { post '/auth/create-account', as: :json, params: signup_params }.not_to(change(User, :count))
       end
     end
   end

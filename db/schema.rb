@@ -10,10 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_06_26_230248) do
+ActiveRecord::Schema.define(version: 2024_12_17_003217) do
 
   # These are extensions that must be enabled in order to support this database
-  enable_extension "pg_stat_statements"
+  enable_extension "citext"
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
@@ -116,23 +116,43 @@ ActiveRecord::Schema.define(version: 2023_06_26_230248) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "user_login_change_keys", id: :uuid, default: nil, force: :cascade do |t|
+    t.string "key", null: false
+    t.string "login", null: false
+    t.datetime "deadline", null: false
+  end
+
+  create_table "user_password_reset_keys", id: :uuid, default: nil, force: :cascade do |t|
+    t.string "key", null: false
+    t.datetime "deadline", null: false
+    t.datetime "email_last_sent", default: -> { "CURRENT_TIMESTAMP" }, null: false
+  end
+
+  create_table "user_verification_keys", id: :uuid, default: nil, force: :cascade do |t|
+    t.string "key", null: false
+    t.datetime "requested_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "email_last_sent", default: -> { "CURRENT_TIMESTAMP" }, null: false
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "client_id"
     t.string "first_name"
     t.string "last_name"
-    t.string "email"
-    t.string "password_digest"
+    t.citext "email", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "username"
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
+    t.integer "status", default: 1, null: false
+    t.string "password_hash"
     t.index ["client_id"], name: "index_users_on_client_id", unique: true
-    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["email"], name: "index_users_on_email", unique: true, where: "(status = ANY (ARRAY[1, 2]))"
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
   add_foreign_key "dynamic_recipes", "users", column: "owner_id", primary_key: "client_id"
   add_foreign_key "recipes", "users", column: "owner_id", primary_key: "client_id"
   add_foreign_key "shopping_lists", "users", column: "owner_id", primary_key: "client_id"
+  add_foreign_key "user_login_change_keys", "users", column: "id"
+  add_foreign_key "user_password_reset_keys", "users", column: "id"
+  add_foreign_key "user_verification_keys", "users", column: "id"
 end

@@ -27,7 +27,8 @@ RSpec.describe 'Api::V1::Tags', type: :request do
     context 'with query' do
       context 'with no tags selected' do
         before do
-          get '/api/v1/tags', params: { query: { term: 'BBB' } }
+          query = { term: 'BBB' }.to_json
+          get "/api/v1/tags", params: {query:}
         end
 
         include_examples 'content type', :json
@@ -44,15 +45,13 @@ RSpec.describe 'Api::V1::Tags', type: :request do
 
       context 'when excluding certain tags' do
         before do
-          get '/api/v1/tags',
-              params: {
-                query: {
+          query = {
                   term: 'B',
                   not: {
                     client_id: [Tag.find_by(name: 'BB').client_id],
                   },
-                },
-              }
+                }.to_json
+          get "/api/v1/tags", params: {query:}
         end
 
         include_examples 'content type', :json

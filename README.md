@@ -22,9 +22,10 @@ RAILS_ENV=test rails db:drop && RAILS_ENV=test rails db:create && RAILS_ENV=test
 ```
 
 $env:EDITOR='vim'
+
 rails credentials:edit --environment development
 
-sudo service redis-server start
+% sudo service redis-server start # redis no longer used after switching auth from jwt sessions to rodauth
 
 $env:PGPASSWORD='Il2ep!!!'
 $env:PGUSER='postgres'

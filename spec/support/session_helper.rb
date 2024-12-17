@@ -4,7 +4,13 @@
 module SessionHelper
   def sign_in(payload)
     payload = payload.slice(:email, :password) if payload.is_a?(User)
-    post '/signin', params: payload
+    post '/auth/login', params: payload.to_json, headers: api_headers
+  end
+
+  def api_headers
+    {
+      'Content-Type': content_type_map[:json] 
+    }
   end
 
   def session_headers
@@ -22,5 +28,6 @@ module SessionHelper
 end
 
 RSpec.configure do |config|
+  config.include Rodauth::Rails::Test::Controller, type: :controller
   config.include SessionHelper
 end
